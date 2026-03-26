@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Astoria Living — HR FMS</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090F;--sf:#0D1117;--s2:#131820;--s3:#181F2A;--s4:#1E2736;
+  --bd:#1F2D42;--bd2:#2A3D58;
+  --cyan:#00D4FF;--cyan2:rgba(0,212,255,.12);
+  --gold:#FFB800;--gold2:rgba(255,184,0,.12);
+  --green:#00E676;--green2:rgba(0,230,118,.1);
+  --red:#FF4444;--red2:rgba(255,68,68,.1);
+  --purple:#B060FF;--purple2:rgba(176,96,255,.1);
+  --orange:#FF8C42;--orange2:rgba(255,140,66,.1);
+  --blue:#4488FF;--blue2:rgba(68,136,255,.1);
+  --pink:#FF6B9D;--pink2:rgba(255,107,157,.1);
+  --teal:#00BFA5;--teal2:rgba(0,191,165,.1);
+  --text:#E8F0FE;--sub:#7A90B0;--dim:#3A5070;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:13px}
+::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
+input,select,textarea,button{font-family:'DM Sans',sans-serif}
+.page{display:none}.page.active{display:flex}
+
+/* LOGIN */
+#loginPage{align-items:center;justify-content:center;min-height:100vh;width:100%;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,212,255,.06),transparent 60%),radial-gradient(ellipse 60% 80% at 80% 90%,rgba(176,96,255,.04),transparent 60%),var(--bg);position:relative;overflow:hidden;}
+.lcard{background:linear-gradient(160deg,var(--s2),var(--sf));border:1px solid var(--bd);border-radius:16px;width:400px;padding:40px 32px 32px;position:relative;z-index:1;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:cardIn .4s ease both;}
+@keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
+.lcard::before{content:'';position:absolute;top:0;left:15%;right:15%;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:.5;}
+.l-brand{text-align:center;margin-bottom:28px}
+.l-brand-logo{width:54px;height:54px;border-radius:14px;background:linear-gradient(135deg,rgba(176,96,255,.2),rgba(176,96,255,.05));border:1px solid rgba(176,96,255,.4);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;box-shadow:0 0 24px rgba(176,96,255,.2);}
+.l-brand-name{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;letter-spacing:2px;color:var(--text);}
+.l-brand-name span{color:var(--purple)}
+.l-brand-sub{font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--dim);margin-top:4px;text-transform:uppercase;}
+.l-roles-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--dim);text-transform:uppercase;margin-bottom:10px;}
+.l-roles{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:20px}
+.l-role-btn{background:var(--s3);border:1.5px solid var(--bd);border-radius:9px;padding:12px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;transition:all .2s;position:relative;}
+.l-role-btn *{pointer-events:none}
+.l-role-btn:hover{border-color:var(--purple);background:var(--purple2)}
+.l-role-btn.sel{border-color:var(--purple);background:var(--purple2);box-shadow:0 0 0 2px rgba(176,96,255,.15)}
+.l-role-icon{font-size:20px}.l-role-name{font-size:11px;font-weight:600;color:var(--sub);transition:color .2s}
+.l-role-btn:hover .l-role-name,.l-role-btn.sel .l-role-name{color:var(--purple)}
+.l-role-chk{position:absolute;top:6px;right:7px;width:14px;height:14px;border-radius:50%;background:var(--purple);color:var(--bg);font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(0);transition:all .2s;}
+.l-role-btn.sel .l-role-chk{opacity:1;transform:scale(1)}
+.l-sep{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.l-sep-line{flex:1;height:1px;background:var(--bd)}
+.l-sep-txt{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
+.l-pass-wrap{position:relative;margin-bottom:14px}
+.l-pass{width:100%;padding:12px 40px 12px 14px;background:var(--s3);border:1.5px solid var(--bd);border-radius:9px;color:var(--text);font-size:13px;outline:none;transition:all .2s;letter-spacing:1.5px;}
+.l-pass:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(176,96,255,.08)}
+.l-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px}
+.l-btn{width:100%;padding:13px;background:linear-gradient(135deg,rgba(176,96,255,.2),rgba(176,96,255,.1));border:1px solid rgba(176,96,255,.4);border-radius:9px;color:var(--purple);font-size:13px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .2s;}
+.l-btn:hover{box-shadow:0 0 30px rgba(176,96,255,.2)}
+.l-err{text-align:center;font-size:11px;color:var(--red);margin-top:10px;min-height:16px}
+.l-foot{text-align:center;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
+
+/* APP */
+#appPage{flex-direction:column;height:100vh;overflow:hidden}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:0 22px;height:52px;background:var(--sf);border-bottom:1px solid var(--bd);flex-shrink:0;z-index:100;position:relative;}
+.topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:.2;}
+.tb-brand{display:flex;align-items:center;gap:10px}
+.tb-logo{width:30px;height:30px;border-radius:7px;background:rgba(176,96,255,.1);border:1px solid rgba(176,96,255,.2);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.tb-name{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:700;letter-spacing:1.5px;color:var(--text);}
+.tb-name span{color:var(--purple)}
+.tb-name small{display:block;font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--dim);font-weight:400;margin-top:-2px;}
+.tb-nav{display:flex;height:100%;margin-left:24px}
+.tb-ni{display:flex;align-items:center;gap:6px;padding:0 14px;font-size:11px;font-weight:600;color:var(--sub);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;letter-spacing:.3px;text-transform:uppercase;}
+.tb-ni:hover{color:var(--text)}.tb-ni.active{color:var(--purple);border-bottom-color:var(--purple)}
+.tb-right{display:flex;align-items:center;gap:8px}
+.tb-pill{padding:4px 10px;border-radius:20px;font-size:9px;font-weight:600;border:1px solid;cursor:default;letter-spacing:.5px;font-family:'JetBrains Mono',monospace;}
+.tp-role{background:var(--gold2);border-color:rgba(255,184,0,.3);color:var(--gold)}
+.tp-jobs{background:var(--cyan2);border-color:rgba(0,212,255,.3);color:var(--cyan)}
+.tp-cands{background:var(--purple2);border-color:rgba(176,96,255,.3);color:var(--purple)}
+.tb-add-btn{padding:7px 16px;background:linear-gradient(135deg,rgba(176,96,255,.18),rgba(176,96,255,.08));border:1px solid rgba(176,96,255,.35);border-radius:8px;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;letter-spacing:.3px;}
+.tb-add-btn:hover{box-shadow:0 0 16px rgba(176,96,255,.15)}
+.tb-logout{padding:4px 10px;border:1px solid var(--bd);background:none;border-radius:6px;color:var(--dim);font-size:10px;cursor:pointer;transition:all .2s}
+.tb-logout:hover{border-color:var(--red);color:var(--red)}
+.app-body{flex:1;overflow:hidden;position:relative}
+.view{display:none;height:100%;overflow-y:auto}.view.active{display:block}
+
+/* PIPELINE STAGE CARDS */
+.stage-bar{display:flex;gap:5px;padding:12px 20px;background:var(--sf);border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;}
+.sc{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s;flex-shrink:0;min-width:110px;}
+.sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.sc:hover{border-color:var(--bd2);transform:translateY(-1px)}
+.sc-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--dim);margin-bottom:3px;}
+.sc-num{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;line-height:1;margin-bottom:1px;}
+.sc-days{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim)}
+
+/* TOOLBAR */
+.toolbar{display:flex;align-items:center;gap:8px;padding:12px 20px;border-bottom:1px solid var(--bd);flex-wrap:wrap;}
+.srch-box{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:7px 12px;min-width:220px;transition:border-color .2s;}
+.srch-box:focus-within{border-color:var(--purple)}
+.srch-box input{background:none;border:none;outline:none;color:var(--text);font-size:12px;width:100%}
+.fbtns{display:flex;gap:4px;flex-wrap:wrap;flex:1}
+.fb{padding:5px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--s2);color:var(--sub);font-size:10px;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:.3px;font-family:'JetBrains Mono',monospace;}
+.fb:hover{color:var(--text);border-color:var(--bd2)}.fb.active{background:var(--purple);border-color:var(--purple);color:#fff;font-weight:700}
+.add-btn{padding:7px 16px;background:linear-gradient(135deg,rgba(176,96,255,.18),rgba(176,96,255,.08));border:1px solid rgba(176,96,255,.35);border-radius:7px;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;margin-left:auto;}
+
+/* TABLE */
+.tw{padding:0 20px 20px;overflow-x:auto;}
+table{width:100%;border-collapse:collapse;min-width:900px}
+thead th{background:var(--s2);padding:9px 12px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim);border-bottom:1px solid var(--bd);white-space:nowrap;}
+tbody tr{border-bottom:1px solid rgba(31,45,66,.5);cursor:pointer;transition:background .12s;}
+tbody tr:hover{background:rgba(176,96,255,.03)}
+td{padding:10px 12px;vertical-align:middle}
+.td-name{font-weight:600;color:var(--text);margin-bottom:1px}
+.td-sub{font-size:10px;color:var(--dim)}
+.status-badge{padding:3px 9px;border-radius:20px;font-size:9px;font-weight:700;letter-spacing:.5px;white-space:nowrap;font-family:'JetBrains Mono',monospace;}
+.st-active{background:var(--cyan2);color:var(--cyan);border:1px solid rgba(0,212,255,.2)}
+.st-done{background:var(--green2);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.st-late{background:var(--red2);color:var(--red);border:1px solid rgba(255,68,68,.2)}
+.st-hold{background:var(--gold2);color:var(--gold);border:1px solid rgba(255,184,0,.2)}
+.st-lost{background:rgba(255,68,68,.12);color:var(--red);border:1px solid rgba(255,68,68,.2)}
+.st-hired{background:var(--green2);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.st-rejected{background:var(--red2);color:var(--red);border:1px solid rgba(255,68,68,.2)}
+.prog-dots{display:flex;gap:2px;flex-wrap:wrap}
+.pd{width:18px;height:18px;border-radius:4px;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:var(--dim);background:var(--s2);transition:all .2s;}
+.pd.done{background:var(--green);border-color:var(--green);color:var(--bg)}.pd.active{background:var(--purple);border-color:var(--purple);color:#fff;box-shadow:0 0 8px rgba(176,96,255,.4)}.pd.late{background:var(--red);border-color:var(--red);color:#fff}
+.empty-state{text-align:center;padding:80px 20px;}
+.empty-icon{font-size:48px;opacity:.2;margin-bottom:16px}.empty-title{font-family:'Rajdhani',sans-serif;font-size:22px;color:var(--sub);margin-bottom:6px}.empty-sub{font-size:11px;color:var(--dim);margin-bottom:20px}
+.empty-btn{padding:9px 22px;background:rgba(176,96,255,.1);border:1px solid rgba(176,96,255,.3);border-radius:8px;color:var(--purple);font-size:12px;font-weight:700;cursor:pointer;}
+
+/* DASHBOARD */
+.dash-wrap{padding:20px}
+.kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s;}
+.kpi:hover{border-color:var(--bd2);transform:translateY(-2px)}.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
+.kk0::before{background:var(--purple)}.kk1::before{background:var(--cyan)}.kk2::before{background:var(--green)}.kk3::before{background:var(--red)}.kk4::before{background:var(--gold)}
+.kpi-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--dim);text-transform:uppercase;margin-bottom:8px}
+.kpi-val{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
+.kk0 .kpi-val{color:var(--purple)}.kk1 .kpi-val{color:var(--cyan)}.kk2 .kpi-val{color:var(--green)}.kk3 .kpi-val{color:var(--red)}.kk4 .kpi-val{color:var(--gold)}
+.kpi-sub{font-size:10px;color:var(--dim)}
+.dg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.dg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.dcard{background:var(--s2);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
+.dcard-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--s3);border-bottom:1px solid var(--bd);}
+.dcard-ttl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1.5px;color:var(--sub);text-transform:uppercase;}.dcard-ttl span{color:var(--purple)}
+.dcard-body{padding:14px}
+.act-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(31,45,66,.4)}
+.act-item:last-child{border-bottom:none;padding-bottom:0}
+.act-dot{width:6px;height:6px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.act-time{font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--dim);flex-shrink:0;padding-top:1px;white-space:nowrap}
+.act-txt{font-size:11px;color:var(--sub);line-height:1.4}
+.fn-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.fn-lbl{width:80px;font-size:9px;color:var(--sub);flex-shrink:0;text-align:right;font-family:'JetBrains Mono',monospace;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fn-bar{flex:1;height:18px;background:var(--s3);border-radius:3px;overflow:hidden;border:1px solid var(--bd)}
+.fn-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:7px;font-size:9px;font-weight:700;color:var(--bg);transition:width .8s ease}
+.fn-cnt{width:22px;text-align:right;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text);flex-shrink:0}
+
+/* MODALS */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(6px)}.mo.open{display:flex}
+.md{background:var(--s2);border:1px solid var(--bd);border-radius:14px;width:700px;max-width:96vw;max-height:92vh;overflow-y:auto;animation:mIn .22s ease;box-shadow:0 40px 80px rgba(0,0,0,.6);}
+.md.xl{width:960px}
+@keyframes mIn{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:16px 20px 14px;border-bottom:1px solid var(--bd);position:sticky;top:0;background:var(--s2);z-index:5;border-radius:14px 14px 0 0;}
+.mh::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:.2;}
+.mt{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--text);letter-spacing:.5px;}.mt span{color:var(--purple)}
+.mclose{width:28px;height:28px;border-radius:7px;border:1px solid var(--bd);background:none;color:var(--sub);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.mclose:hover{border-color:var(--red);color:var(--red)}
+.mb{padding:20px}.mf{display:flex;gap:8px;justify-content:flex-end;padding:14px 20px;border-top:1px solid var(--bd);}
+.fsec{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:2px;color:var(--purple);text-transform:uppercase;padding:8px 0 6px;border-bottom:1px solid var(--bd);margin-bottom:12px;}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}.fr.full{grid-template-columns:1fr}.fr.t3{grid-template-columns:1fr 1fr 1fr}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--sub);text-transform:uppercase;}
+.fi,.fs{padding:9px 11px;background:var(--s3);border:1.5px solid var(--bd);border-radius:8px;color:var(--text);font-size:12px;outline:none;width:100%;transition:all .2s;}
+.fi:focus,.fs:focus{border-color:var(--purple);box-shadow:0 0 0 3px rgba(176,96,255,.07)}
+.fs option{background:var(--s3)}
+textarea.fi{resize:vertical;min-height:60px}
+.bp{padding:9px 18px;background:linear-gradient(135deg,rgba(176,96,255,.2),rgba(176,96,255,.1));border:1px solid rgba(176,96,255,.4);border-radius:8px;color:var(--purple);font-size:12px;font-weight:700;cursor:pointer;transition:all .2s;}
+.bp:hover{box-shadow:0 0 16px rgba(176,96,255,.2)}
+.bs{padding:9px 14px;border:1.5px solid var(--bd);background:none;border-radius:8px;color:var(--sub);font-size:12px;cursor:pointer;transition:all .2s;}
+.bs:hover{border-color:var(--bd2);color:var(--text)}
+.bd2{padding:9px 14px;border:1.5px solid rgba(255,68,68,.3);background:var(--red2);border-radius:8px;color:var(--red);font-size:12px;cursor:pointer;}
+
+/* PIPELINE */
+.pipe-hdr{background:var(--s3);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;margin-bottom:14px;}
+.ph-name{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--purple);margin-bottom:5px;}
+.ph-meta{display:flex;gap:12px;flex-wrap:wrap}
+.ph-m{font-size:10px;color:var(--dim);display:flex;align-items:center;gap:4px}.ph-m span{color:var(--sub)}
+.step-card{border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:8px;transition:all .2s;background:var(--sf);}
+.step-card.active-s{border-color:var(--purple);box-shadow:0 0 0 2px rgba(176,96,255,.1)}.step-card.done-s{border-color:rgba(0,230,118,.3);background:rgba(0,230,118,.01)}.step-card.locked-s{opacity:.4;pointer-events:none}
+.step-head{display:flex;align-items:center;justify-content:space-between;padding:11px 15px;background:var(--s2);cursor:pointer;transition:background .15s;border-bottom:1px solid transparent;}
+.step-card.open .step-head{border-bottom-color:var(--bd)}.step-head:hover{background:var(--s3)}
+.sh-left{display:flex;align-items:center;gap:10px}
+.s-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.s-num{font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;letter-spacing:1.5px;color:var(--dim);}
+.s-name{font-size:13px;font-weight:600;color:var(--text)}
+.ssb{padding:3px 9px;border-radius:20px;font-size:9px;font-weight:600;letter-spacing:.3px}
+.ssb-p{background:var(--s3);color:var(--dim);border:1px solid var(--bd)}.ssb-a{background:var(--purple2);color:var(--purple);border:1px solid rgba(176,96,255,.2)}.ssb-d{background:var(--green2);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.chev{color:var(--dim);font-size:11px;transition:transform .2s}.step-card.open .chev{transform:rotate(180deg)}
+.step-body{display:none;padding:14px 16px;border-top:1px solid var(--bd)}.step-card.open .step-body{display:block}
+.sb-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-bottom:10px}
+.sb-row.two{grid-template-columns:1fr 1fr}.sb-row.full{grid-template-columns:1fr}
+.delay-pill{padding:3px 8px;border-radius:5px;font-size:9px;font-weight:600;font-family:'JetBrains Mono',monospace}
+.dp-ok{background:var(--green2);color:var(--green)}.dp-late{background:var(--red2);color:var(--red)}.dp-pend{background:var(--gold2);color:var(--gold)}
+.conn{display:flex;justify-content:center;color:var(--dim);font-size:14px;padding:2px 0}
+.da-btn{padding:6px 14px;background:rgba(176,96,255,.1);border:1px solid rgba(176,96,255,.3);border-radius:6px;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:10px;}
+.da-btn.green{background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.25);color:var(--green)}
+.da-btn.red{background:rgba(255,68,68,.08);border-color:rgba(255,68,68,.25);color:var(--red)}
+.da-btn.gold{background:rgba(255,184,0,.08);border-color:rgba(255,184,0,.25);color:var(--gold)}
+.lh-form{margin-top:10px;padding:12px;background:var(--s3);border:1px solid var(--bd);border-radius:8px;display:none}.lh-form.show{display:block}
+.lh-row{display:flex;gap:8px;align-items:flex-end;margin-top:8px;flex-wrap:wrap}
+.lh-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--sub);text-transform:uppercase;margin-bottom:4px}
+
+/* SYNC/TOAST */
+.sync-dot{position:fixed;bottom:14px;right:14px;z-index:400;padding:5px 11px;border-radius:20px;font-size:9px;font-weight:600;display:flex;align-items:center;gap:5px;transition:all .25s;font-family:'JetBrains Mono',monospace;letter-spacing:.5px;}
+.sync-dot.saved{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);color:var(--green)}.sync-dot.saving{background:var(--gold2);border:1px solid rgba(255,184,0,.3);color:var(--gold)}.sync-dot.err{background:var(--red2);border:1px solid rgba(255,68,68,.3);color:var(--red)}
+.sd{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink .8s ease infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+.toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 18px;font-size:11px;z-index:999;opacity:0;transition:all .28s;white-space:nowrap;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.4);}
+.toast.show{transform:translateX(-50%) translateY(0);opacity:1}.toast.s{border-left:3px solid var(--green)}.toast.e{border-left:3px solid var(--red)}.toast.i{border-left:3px solid var(--purple)}
+
+/* TAB SWITCHER */
+.tab-switch{display:flex;gap:6px;padding:12px 20px;background:var(--sf);border-bottom:1px solid var(--bd);}
+.tab-btn{padding:7px 18px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;}
+.tab-btn.active{background:var(--purple2);border-color:rgba(176,96,255,.4);color:var(--purple)}
+
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(3,1fr)}.dg2,.dg3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="loginPage" class="page active">
+  <div class="lcard">
+    <div class="l-brand">
+      <div class="l-brand-logo">👥</div>
+      <div class="l-brand-name">ASTORIA <span>LIVING</span></div>
+      <div class="l-brand-sub">Human Resource FMS</div>
+    </div>
+    <div class="l-roles-label">Select Role</div>
+    <div class="l-roles">
+      <button class="l-role-btn" type="button" onclick="pickRole('owner',this)"><div class="l-role-chk">✓</div><div class="l-role-icon">👑</div><div class="l-role-name">Owner / MD</div></button>
+      <button class="l-role-btn" type="button" onclick="pickRole('hr_manager',this)"><div class="l-role-chk">✓</div><div class="l-role-icon">🧑‍💼</div><div class="l-role-name">HR Manager</div></button>
+      <button class="l-role-btn" type="button" onclick="pickRole('interviewer',this)"><div class="l-role-chk">✓</div><div class="l-role-icon">🎯</div><div class="l-role-name">Interviewer</div></button>
+      <button class="l-role-btn" type="button" onclick="pickRole('viewer',this)"><div class="l-role-chk">✓</div><div class="l-role-icon">👁️</div><div class="l-role-name">View Only</div></button>
+    </div>
+    <div class="l-sep"><div class="l-sep-line"></div><div class="l-sep-txt">Password</div><div class="l-sep-line"></div></div>
+    <div class="l-pass-wrap">
+      <input class="l-pass" type="password" id="passInput" placeholder="Enter password...">
+      <button class="l-eye" id="passToggle">👁</button>
+    </div>
+    <button class="l-btn" id="enterBtn">ENTER SYSTEM →</button>
+    <div class="l-err" id="lErr"></div>
+    <div class="l-foot">Astoria Living · HR FMS · Confidential</div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="appPage" class="page" style="flex-direction:column">
+  <div class="topbar">
+    <div class="tb-brand"><div class="tb-logo">👥</div><div class="tb-name">ASTORIA <span>LIVING</span><small>HUMAN RESOURCE FMS</small></div></div>
+    <div class="tb-nav">
+      <div class="tb-ni active" id="nav-dash">📊 Dashboard</div>
+      <div class="tb-ni" id="nav-jobs">💼 Job Postings</div>
+      <div class="tb-ni" id="nav-candidates">👤 Candidates</div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-pill tp-jobs" id="jobsPill">💼 0 Jobs</div>
+      <div class="tb-pill tp-cands" id="candsPill">👤 0 Candidates</div>
+      <div class="tb-pill tp-role" id="rolePill">👑 Owner</div>
+      <button class="tb-add-btn" id="addPillBtn">+ New</button>
+      <button class="tb-logout" id="logoutBtn">Logout</button>
+    </div>
+  </div>
+  <div class="app-body">
+
+    <!-- DASHBOARD -->
+    <div class="view active" id="view-dash">
+      <div class="dash-wrap">
+        <div class="kpi-row">
+          <div class="kpi kk0"><div class="kpi-lbl">Total Jobs</div><div class="kpi-val" id="dk0">0</div><div class="kpi-sub">Active postings</div></div>
+          <div class="kpi kk1"><div class="kpi-lbl">Total Candidates</div><div class="kpi-val" id="dk1">0</div><div class="kpi-sub">In pipeline</div></div>
+          <div class="kpi kk2"><div class="kpi-lbl">Hired</div><div class="kpi-val" id="dk2">0</div><div class="kpi-sub">This cycle</div></div>
+          <div class="kpi kk3"><div class="kpi-lbl">Rejected</div><div class="kpi-val" id="dk3">0</div><div class="kpi-sub">Not selected</div></div>
+          <div class="kpi kk4"><div class="kpi-lbl">In Interview</div><div class="kpi-val" id="dk4">0</div><div class="kpi-sub">Active stage</div></div>
+        </div>
+        <div class="dg3">
+          <div class="dcard"><div class="dcard-hdr"><div class="dcard-ttl">Job <span>Pipeline</span></div></div><div class="dcard-body" id="jobPipelineDist"></div></div>
+          <div class="dcard"><div class="dcard-hdr"><div class="dcard-ttl">Candidate <span>Stage</span></div></div><div class="dcard-body" id="candStageDist"></div></div>
+          <div class="dcard"><div class="dcard-hdr"><div class="dcard-ttl">Department <span>Breakdown</span></div></div><div class="dcard-body" id="deptBreak"></div></div>
+        </div>
+        <div class="dcard"><div class="dcard-hdr"><div class="dcard-ttl">Recent <span>Activity</span></div></div><div class="dcard-body" id="recentAct"></div></div>
+      </div>
+    </div>
+
+    <!-- JOB POSTINGS -->
+    <div class="view" id="view-jobs">
+      <div class="stage-bar" id="jobStageBar"></div>
+      <div class="toolbar">
+        <div class="srch-box"><span style="color:var(--dim)">🔍</span><input id="jobSrch" placeholder="Search job, department..."></div>
+        <div class="fbtns" id="jobFilterBtns">
+          <button class="fb active" data-f="All">All</button>
+          <button class="fb" data-f="JD Creation">JD</button>
+          <button class="fb" data-f="Job Posting">Posting</button>
+          <button class="fb" data-f="Resume Screening">Screening</button>
+          <button class="fb" data-f="Shortlisted">Shortlisted</button>
+          <button class="fb" data-f="Closed">Closed</button>
+        </div>
+        <button class="add-btn" id="addJobBtn">+ New Job</button>
+      </div>
+      <div class="tw">
+        <table id="jobTbl" style="display:none">
+          <thead><tr><th>#</th><th>Date</th><th>Job Title</th><th>Department</th><th>Indent No</th><th>Current Stage</th><th>Progress</th><th>Status</th></tr></thead>
+          <tbody id="jobTbody"></tbody>
+        </table>
+        <div id="jobEmpty" class="empty-state"><div class="empty-icon">💼</div><div class="empty-title">No Job Postings Yet</div><div class="empty-sub">Create your first job posting to start the pipeline</div><button class="empty-btn" id="emptyJobBtn">+ New Job Posting</button></div>
+      </div>
+    </div>
+
+    <!-- CANDIDATES -->
+    <div class="view" id="view-candidates">
+      <div class="stage-bar" id="candStageBar"></div>
+      <div class="toolbar">
+        <div class="srch-box"><span style="color:var(--dim)">🔍</span><input id="candSrch" placeholder="Search candidate, job..."></div>
+        <div class="fbtns" id="candFilterBtns">
+          <button class="fb active" data-f="All">All</button>
+          <button class="fb" data-f="Telephonic">Telephonic</button>
+          <button class="fb" data-f="Technical">Technical</button>
+          <button class="fb" data-f="MD Interview">MD</button>
+          <button class="fb" data-f="Final HR">Final HR</button>
+          <button class="fb" data-f="Offer Letter">Offer</button>
+          <button class="fb" data-f="Onboarding">Onboarding</button>
+          <button class="fb" data-f="Hired">Hired ✅</button>
+          <button class="fb" data-f="Rejected">Rejected</button>
+        </div>
+        <button class="add-btn" id="addCandBtn">+ New Candidate</button>
+      </div>
+      <div class="tw">
+        <table id="candTbl" style="display:none">
+          <thead><tr><th>#</th><th>Date</th><th>Candidate</th><th>Job Applied</th><th>Current Stage</th><th>Progress</th><th>Status</th></tr></thead>
+          <tbody id="candTbody"></tbody>
+        </table>
+        <div id="candEmpty" class="empty-state"><div class="empty-icon">👤</div><div class="empty-title">No Candidates Yet</div><div class="empty-sub">Add candidates to start tracking interviews</div><button class="empty-btn" id="emptyCandBtn">+ Add Candidate</button></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ADD JOB MODAL -->
+<div class="mo" id="addJobMo">
+  <div class="md">
+    <div class="mh"><div class="mt" id="addJobTitle">New <span>Job Posting</span></div><button class="mclose" onclick="closeMo('addJobMo')">✕</button></div>
+    <div class="mb">
+      <div class="fsec">Job Information</div>
+      <div class="fr"><div class="fg"><label class="fl">Job Title *</label><input class="fi" id="j-title" placeholder="e.g. Supply Chain Executive"></div><div class="fg"><label class="fl">Department *</label><input class="fi" id="j-dept" placeholder="e.g. Purchase, HR, Finance"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Location</label><input class="fi" id="j-loc" placeholder="e.g. Mumbai, Delhi"></div><div class="fg"><label class="fl">Indent No</label><input class="fi" id="j-indent" placeholder="e.g. IN-01"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Salary Budget</label><input class="fi" id="j-salary" placeholder="e.g. 4-6 LPA"></div><div class="fg"><label class="fl">Experience Required</label><input class="fi" id="j-exp" placeholder="e.g. 2-4 years"></div></div>
+      <div class="fr full"><div class="fg"><label class="fl">Required Qualifications</label><input class="fi" id="j-qual" placeholder="e.g. Graduate, MBA"></div></div>
+      <div class="fr full"><div class="fg"><label class="fl">Key Responsibilities</label><textarea class="fi" id="j-resp" placeholder="Key job responsibilities..."></textarea></div></div>
+      <div class="fr full"><div class="fg"><label class="fl">Additional Info</label><textarea class="fi" id="j-info" placeholder="Additional information..."></textarea></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Start Date</label><input class="fi" type="date" id="j-date"></div><div class="fg"><label class="fl">Assigned To</label><input class="fi" id="j-assign" placeholder="HR person name"></div></div>
+    </div>
+    <div class="mf"><button class="bs" onclick="closeMo('addJobMo')">Cancel</button><button class="bp" id="saveJobBtn">💾 Save & Open Pipeline →</button></div>
+  </div>
+</div>
+
+<!-- ADD CANDIDATE MODAL -->
+<div class="mo" id="addCandMo">
+  <div class="md">
+    <div class="mh"><div class="mt" id="addCandTitle">New <span>Candidate</span></div><button class="mclose" onclick="closeMo('addCandMo')">✕</button></div>
+    <div class="mb">
+      <div class="fsec">Candidate Information</div>
+      <div class="fr"><div class="fg"><label class="fl">Candidate Name *</label><input class="fi" id="c-name" placeholder="Full name"></div><div class="fg"><label class="fl">Mobile *</label><input class="fi" id="c-mobile" placeholder="Mobile number"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Email</label><input class="fi" id="c-email" placeholder="Email address"></div><div class="fg"><label class="fl">Job Applied For</label><select class="fs" id="c-job"></select></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Qualifications</label><input class="fi" id="c-qual" placeholder="e.g. MBA, B.Tech"></div><div class="fg"><label class="fl">Experience (years)</label><input class="fi" id="c-exp" placeholder="e.g. 3"></div></div>
+      <div class="fr t3"><div class="fg"><label class="fl">Current Salary</label><input class="fi" id="c-curr-sal" placeholder="e.g. 4 LPA"></div><div class="fg"><label class="fl">Expected Salary</label><input class="fi" id="c-exp-sal" placeholder="e.g. 6 LPA"></div><div class="fg"><label class="fl">Notice Period</label><input class="fi" id="c-notice" placeholder="e.g. 30 days"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Current Company</label><input class="fi" id="c-company" placeholder="Current employer"></div><div class="fg"><label class="fl">Headhunter / Source</label><input class="fi" id="c-source" placeholder="Source of candidate"></div></div>
+      <div class="fr full"><div class="fg"><label class="fl">Address</label><input class="fi" id="c-addr" placeholder="Candidate address"></div></div>
+      <div class="fr"><div class="fg"><label class="fl">Resume Link</label><input class="fi" id="c-resume" placeholder="Google Drive / LinkedIn URL"></div><div class="fg"><label class="fl">Date</label><input class="fi" type="date" id="c-date"></div></div>
+    </div>
+    <div class="mf"><button class="bs" onclick="closeMo('addCandMo')">Cancel</button><button class="bp" id="saveCandBtn">💾 Save & Open Pipeline →</button></div>
+  </div>
+</div>
+
+<!-- JOB PIPELINE MODAL -->
+<div class="mo" id="jobPipeMo">
+  <div class="md xl">
+    <div class="mh"><div class="mt" id="jobPipeTitle">Job <span>Pipeline</span></div><button class="mclose" onclick="closeMo('jobPipeMo')">✕</button></div>
+    <div class="mb"><div class="pipe-hdr" id="jobPipeHdr"></div><div id="jobFlowSteps"></div></div>
+    <div class="mf"><button class="bd2" id="deleteJobBtn">🗑 Delete</button><button class="bs" onclick="closeMo('jobPipeMo')">Close</button><button class="bs" id="editJobBtn">✏️ Edit</button></div>
+  </div>
+</div>
+
+<!-- CANDIDATE PIPELINE MODAL -->
+<div class="mo" id="candPipeMo">
+  <div class="md xl">
+    <div class="mh"><div class="mt" id="candPipeTitle">Candidate <span>Pipeline</span></div><button class="mclose" onclick="closeMo('candPipeMo')">✕</button></div>
+    <div class="mb"><div class="pipe-hdr" id="candPipeHdr"></div><div id="candFlowSteps"></div></div>
+    <div class="mf"><button class="bd2" id="deleteCandBtn">🗑 Delete</button><button class="bs" onclick="closeMo('candPipeMo')">Close</button><button class="bs" id="editCandBtn">✏️ Edit</button></div>
+  </div>
+</div>
+
+<div class="sync-dot saved" id="syncDot"><div class="sd"></div><span id="syncTxt">Loaded</span></div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════
+// SUPABASE CONFIG
+// ══════════════════════════════════════
+var SUPABASE_URL='https://duckuubnszaytuuerffx.supabase.co';
+var SUPABASE_KEY='sb_publishable_LwGWBo9mlVBsYwWf-UporQ_eTdCxhs3';
+var SB_API=SUPABASE_URL+'/rest/v1';
+var SB_H={'Content-Type':'application/json','apikey':SUPABASE_KEY,'Authorization':'Bearer '+SUPABASE_KEY,'Prefer':'return=representation'};
+
+function sbFetch(path,method,body){
+  var opts={method:method||'GET',headers:Object.assign({},SB_H)};
+  if(body)opts.body=JSON.stringify(body);
+  return fetch(SB_API+path,opts).then(function(r){
+    if(!r.ok)return r.text().then(function(t){throw new Error(t);});
+    if(r.status===204)return null;
+    return r.json();
+  });
+}
+
+// ══════════════════════════════════════
+// CONFIG
+// ══════════════════════════════════════
+var PASSWORDS={owner:'hr@owner',hr_manager:'hr@manager',interviewer:'hr@interview',viewer:'hr@view'};
+var ROLE_LABELS={owner:'👑 Owner / MD',hr_manager:'🧑‍💼 HR Manager',interviewer:'🎯 Interviewer',viewer:'👁️ View Only'};
+var READ_ONLY=['viewer'];
+var currentRole=null,editingJobId=null,editingCandId=null,viewingJobId=null,viewingCandId=null;
+var jobs=[],candidates=[],jobFilt='All',candFilt='All';
+var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+// ══════════════════════════════════════
+// JOB PIPELINE STEPS (from Sheet 1)
+// ══════════════════════════════════════
+var JOB_STEPS=[
+  {id:'JD',name:'Job Description (JD) Creation',icon:'📝',color:'var(--cyan)',cbg:'var(--cyan2)',days:1},
+  {id:'POST',name:'Job Posting',icon:'📢',color:'var(--purple)',cbg:'var(--purple2)',days:1},
+  {id:'SCREEN',name:'Resume Screening & Shortlisting',icon:'📋',color:'var(--blue)',cbg:'var(--blue2)',days:3},
+  {id:'CLOSED',name:'Position Closed / Filled',icon:'✅',color:'var(--green)',cbg:'var(--green2)',days:0,isEnd:true}
+];
+
+// ══════════════════════════════════════
+// CANDIDATE PIPELINE STEPS (from Sheet 2)
+// ══════════════════════════════════════
+var CAND_STEPS=[
+  {id:'TEL',name:'Telephonic Confirmation & Fill Details',icon:'📞',color:'var(--cyan)',cbg:'var(--cyan2)',days:1},
+  {id:'TECH',name:'Technical / Department Interview (Round 2)',icon:'🔧',color:'var(--blue)',cbg:'var(--blue2)',days:3},
+  {id:'MD',name:'Interview With MD Sir (Round 3)',icon:'👔',color:'var(--purple)',cbg:'var(--purple2)',days:2},
+  {id:'FINALHR',name:'Final HR Interview & Management Approval',icon:'🤝',color:'var(--gold)',cbg:'var(--gold2)',days:2},
+  {id:'OFFER',name:'Offer Letter Release',icon:'📄',color:'var(--orange)',cbg:'var(--orange2)',days:1},
+  {id:'ONBOARD',name:'Onboarding & Joining',icon:'🎉',color:'var(--green)',cbg:'var(--green2)',days:1,isEnd:true}
+];
+
+// ══════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════
+function today(){return new Date().toISOString().split('T')[0];}
+function fmtDate(d){if(!d)return'—';var x=new Date(d);return x.getDate()+' '+MON[x.getMonth()]+' '+String(x.getFullYear()).slice(2);}
+function escHtml(t){if(!t)return'';return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function addDays(dateStr,n){var d=new Date(dateStr);d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];}
+function daysBetween(d1,d2){return Math.round((new Date(d2)-new Date(d1))/(1000*60*60*24));}
+
+function initJobPipeline(startDate){
+  var sd=startDate||today();
+  var pipe={currentStep:0,steps:{},status:'active',notes:''};
+  var runDate=sd;
+  JOB_STEPS.forEach(function(s,i){
+    pipe.steps[s.id]={planned:runDate,actual:'',status:'pending',notes:''};
+    if(i<JOB_STEPS.length-1&&s.days>0)runDate=addDays(runDate,s.days);
+  });
+  return pipe;
+}
+
+function initCandPipeline(startDate){
+  var sd=startDate||today();
+  var pipe={currentStep:0,steps:{},status:'active',result:'',rejReason:''};
+  var runDate=sd;
+  CAND_STEPS.forEach(function(s,i){
+    pipe.steps[s.id]={planned:runDate,actual:'',status:'pending',notes:''};
+    if(i<CAND_STEPS.length-1&&s.days>0)runDate=addDays(runDate,s.days);
+  });
+  return pipe;
+}
+
+function getJobStatus(job){
+  if(!job.pipeline)return{cls:'st-active',txt:'Active'};
+  var s=job.pipeline.status;
+  if(s==='closed')return{cls:'st-done',txt:'Closed'};
+  if(s==='cancelled')return{cls:'st-lost',txt:'Cancelled'};
+  var cs=JOB_STEPS[job.pipeline.currentStep];
+  if(cs&&job.pipeline.steps[cs.id]&&job.pipeline.steps[cs.id].planned<today()&&!job.pipeline.steps[cs.id].actual)return{cls:'st-late',txt:'Delayed'};
+  return{cls:'st-active',txt:'Active'};
+}
+
+function getCandStatus(c){
+  if(!c.pipeline)return{cls:'st-active',txt:'In Process'};
+  var s=c.pipeline.status;
+  if(s==='hired')return{cls:'st-hired',txt:'✅ Hired'};
+  if(s==='rejected')return{cls:'st-rejected',txt:'❌ Rejected'};
+  return{cls:'st-active',txt:'In Process'};
+}
+
+function currentJobStage(job){
+  if(!job.pipeline)return'JD';
+  var cs=JOB_STEPS[job.pipeline.currentStep];
+  return cs?cs.name:'—';
+}
+function currentCandStage(c){
+  if(!c.pipeline)return'TEL';
+  var cs=CAND_STEPS[c.pipeline.currentStep];
+  return cs?cs.name:'—';
+}
+
+// ══════════════════════════════════════
+// SUPABASE DATA LAYER
+// ══════════════════════════════════════
+function setSS(s,t){var d=document.getElementById('syncDot'),tx=document.getElementById('syncTxt');d.className='sync-dot '+s;tx.textContent=t;}
+
+function loadData(){
+  setSS('saving','Loading...');
+  Promise.all([
+    sbFetch('/hr_jobs?order=created_at.asc','GET'),
+    sbFetch('/hr_candidates?order=created_at.asc','GET')
+  ]).then(function(res){
+    jobs=(res[0]||[]).map(function(r){return{id:r.id,title:r.title,department:r.department||'',location:r.location||'',salary:r.salary_budget||'',exp:r.experience_req||'',qual:r.qualifications||'',resp:r.key_responsibilities||'',info:r.additional_info||'',indent:r.indent_no||'',assign:r.assigned_to||'',date:r.date||'',pipeline:r.pipeline||initJobPipeline(r.date||today())};});
+    candidates=(res[1]||[]).map(function(r){return{id:r.id,name:r.name,mobile:r.mobile||'',email:r.email||'',jobId:r.job_id||'',qual:r.qualifications||'',exp:r.experience||'',currSal:r.current_salary||'',expSal:r.expected_salary||'',notice:r.notice_period||'',company:r.current_company||'',addr:r.address||'',resume:r.resume_link||'',indent:r.indent_no||'',source:r.headhunter||'',date:r.date||'',pipeline:r.pipeline||initCandPipeline(r.date||today())};});
+    setSS('saved','✓ Loaded');buildAll();
+  }).catch(function(e){setSS('err','Load failed');console.error(e);showToast('Load failed','e');});
+}
+
+function saveJobSB(job,cb){
+  setSS('saving','Saving...');
+  var row={id:job.id,title:job.title,department:job.department||'',location:job.location||'',salary_budget:job.salary||'',experience_req:job.exp||'',qualifications:job.qual||'',key_responsibilities:job.resp||'',additional_info:job.info||'',indent_no:job.indent||'',assigned_to:job.assign||'',date:job.date||today(),pipeline:job.pipeline,updated_at:new Date().toISOString()};
+  sbFetch('/hr_jobs?on_conflict=id','POST',row)
+    .then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();})
+    .catch(function(){sbFetch('/hr_jobs?id=eq.'+job.id,'PATCH',{pipeline:job.pipeline,updated_at:new Date().toISOString()}).then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();}).catch(function(e){setSS('err','Save failed');console.error(e);});});
+}
+
+function saveCandSB(cand,cb){
+  setSS('saving','Saving...');
+  var row={id:cand.id,name:cand.name,mobile:cand.mobile||'',email:cand.email||'',job_id:cand.jobId||null,qualifications:cand.qual||'',experience:cand.exp||'',current_salary:cand.currSal||'',expected_salary:cand.expSal||'',notice_period:cand.notice||'',current_company:cand.company||'',address:cand.addr||'',resume_link:cand.resume||'',indent_no:cand.indent||'',headhunter:cand.source||'',date:cand.date||today(),pipeline:cand.pipeline,updated_at:new Date().toISOString()};
+  sbFetch('/hr_candidates?on_conflict=id','POST',row)
+    .then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();})
+    .catch(function(){sbFetch('/hr_candidates?id=eq.'+cand.id,'PATCH',{pipeline:cand.pipeline,updated_at:new Date().toISOString()}).then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();}).catch(function(e){setSS('err','Save failed');console.error(e);});});
+}
+
+function buildAll(){renderJobStageBar();renderJobTable();renderCandStageBar();renderCandTable();buildDash();updatePills();}
+
+function updatePills(){
+  document.getElementById('jobsPill').textContent='💼 '+jobs.length+' Jobs';
+  document.getElementById('candsPill').textContent='👤 '+candidates.length+' Candidates';
+}
+
+// ══════════════════════════════════════
+// LOGIN
+// ══════════════════════════════════════
+var selRole=null;
+function pickRole(r,el){document.querySelectorAll('.l-role-btn').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');selRole=r;document.getElementById('passInput').focus();document.getElementById('lErr').textContent='';}
+function doLogin(){
+  if(!selRole){document.getElementById('lErr').textContent='Please select your role';return;}
+  var pass=document.getElementById('passInput').value.trim();
+  if(!pass){document.getElementById('lErr').textContent='Please enter password';return;}
+  var btn=document.getElementById('enterBtn');btn.textContent='Verifying...';btn.style.opacity='.7';
+  setTimeout(function(){
+    if(pass===PASSWORDS[selRole]){
+      currentRole=selRole;sessionStorage.setItem('hr_role',selRole);
+      btn.textContent='✓ Access Granted';btn.style.color='var(--green)';btn.style.borderColor='rgba(0,230,118,.4)';
+      setTimeout(enterApp,500);
+    }else{
+      btn.textContent='ENTER SYSTEM →';btn.style.opacity='1';btn.style='';
+      document.getElementById('lErr').textContent='Incorrect password — please try again';
+      document.getElementById('passInput').value='';document.getElementById('passInput').focus();
+    }
+  },600);
+}
+function doLogout(){sessionStorage.removeItem('hr_role');currentRole=null;document.getElementById('appPage').classList.remove('active');document.getElementById('loginPage').classList.add('active');document.getElementById('passInput').value='';document.querySelectorAll('.l-role-btn').forEach(function(b){b.classList.remove('sel');});selRole=null;var btn=document.getElementById('enterBtn');btn.textContent='ENTER SYSTEM →';btn.style='';}
+function enterApp(){
+  document.getElementById('loginPage').classList.remove('active');document.getElementById('appPage').classList.add('active');
+  document.getElementById('rolePill').textContent=ROLE_LABELS[currentRole]||currentRole;
+  if(READ_ONLY.includes(currentRole)){document.querySelectorAll('.add-btn,.tb-add-btn').forEach(function(b){b.style.display='none';});}
+  loadData();
+}
+
+// ══════════════════════════════════════
+// VIEW
+// ══════════════════════════════════════
+function showView(v){
+  document.querySelectorAll('.view').forEach(function(e){e.classList.remove('active');});
+  document.querySelectorAll('.tb-ni').forEach(function(e){e.classList.remove('active');});
+  document.getElementById('view-'+v).classList.add('active');
+  document.getElementById('nav-'+v).classList.add('active');
+  if(v==='dash')buildDash();
+}
+
+// ══════════════════════════════════════
+// JOB STAGE BAR
+// ══════════════════════════════════════
+function renderJobStageBar(){
+  var cols=['var(--cyan)','var(--purple)','var(--blue)','var(--green)'];
+  document.getElementById('jobStageBar').innerHTML=JOB_STEPS.map(function(s,i){
+    var cnt=jobs.filter(function(j){return j.pipeline&&JOB_STEPS[j.pipeline.currentStep]&&JOB_STEPS[j.pipeline.currentStep].id===s.id;}).length;
+    return'<div class="sc" onclick="filterJobs(\''+s.name+'\')" style="border-top:2px solid '+s.color+'"><div class="sc-lbl" style="color:'+s.color+'">'+s.icon+' '+s.id+'</div><div class="sc-num" style="color:'+s.color+'">'+cnt+'</div><div class="sc-days">'+s.name.slice(0,12)+'...</div></div>';
+  }).join('');
+}
+
+function filterJobs(stage){
+  jobFilt=stage;
+  document.querySelectorAll('#jobFilterBtns .fb').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-f')===stage);});
+  renderJobTable();
+}
+
+// ══════════════════════════════════════
+// JOB TABLE
+// ══════════════════════════════════════
+function renderJobTable(){
+  var q=document.getElementById('jobSrch').value.toLowerCase();
+  var data=jobs.filter(function(j){
+    if(jobFilt!=='All'){var cs=JOB_STEPS[j.pipeline?j.pipeline.currentStep:0];if(!cs||cs.name!==jobFilt)return false;}
+    if(q){var s=(j.title+' '+(j.department||'')+' '+(j.indent||'')).toLowerCase();if(s.indexOf(q)<0)return false;}
+    return true;
+  });
+  var tbl=document.getElementById('jobTbl'),empty=document.getElementById('jobEmpty');
+  if(!data.length){tbl.style.display='none';empty.style.display='block';return;}
+  tbl.style.display='';empty.style.display='none';
+  document.getElementById('jobTbody').innerHTML=data.map(function(j,i){
+    var curIdx=j.pipeline?j.pipeline.currentStep:0;var cs=JOB_STEPS[curIdx]||JOB_STEPS[0];
+    var ps=getJobStatus(j);
+    var dots=JOB_STEPS.map(function(s,si){var st=j.pipeline?j.pipeline.steps[s.id]:null;var cls=st&&st.status==='done'?'done':si===curIdx?'active':'';return'<div class="pd '+cls+'" title="'+s.name+'">'+(st&&st.status==='done'?'✓':si===curIdx?'●':'')+'</div>';}).join('');
+    var dobj=j.date?new Date(j.date):null;var ds=dobj?(dobj.getDate()+' '+MON[dobj.getMonth()]):'—';
+    return'<tr onclick="openJobPipeline(\''+j.id+'\')">'
+      +'<td style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--dim)">'+(i+1)+'</td>'
+      +'<td style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--sub)">'+ds+'</td>'
+      +'<td><div class="td-name">'+escHtml(j.title)+'</div><div class="td-sub">'+(j.indent||'—')+'</div></td>'
+      +'<td><div style="font-size:11px">'+escHtml(j.department||'—')+'</div>'+(j.assign?'<div class="td-sub">'+escHtml(j.assign)+'</div>':'')+'</td>'
+      +'<td style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--dim)">'+(j.indent||'—')+'</td>'
+      +'<td><div style="font-size:11px;color:'+cs.color+'">'+cs.icon+' '+cs.name+'</div></td>'
+      +'<td><div class="prog-dots">'+dots+'</div></td>'
+      +'<td><span class="status-badge '+ps.cls+'">'+ps.txt+'</span></td>'
+      +'</tr>';
+  }).join('');
+}
+
+// ══════════════════════════════════════
+// CANDIDATE STAGE BAR
+// ══════════════════════════════════════
+function renderCandStageBar(){
+  document.getElementById('candStageBar').innerHTML=CAND_STEPS.map(function(s,i){
+    var cnt=candidates.filter(function(c){return c.pipeline&&CAND_STEPS[c.pipeline.currentStep]&&CAND_STEPS[c.pipeline.currentStep].id===s.id;}).length;
+    return'<div class="sc" onclick="filterCands(\''+s.name+'\')" style="border-top:2px solid '+s.color+'"><div class="sc-lbl" style="color:'+s.color+'">'+s.icon+' '+s.id+'</div><div class="sc-num" style="color:'+s.color+'">'+cnt+'</div><div class="sc-days">'+s.name.slice(0,12)+'...</div></div>';
+  }).join('')
+  +'<div class="sc" style="border-top:2px solid var(--green)"><div class="sc-lbl" style="color:var(--green)">✅ HIRED</div><div class="sc-num" style="color:var(--green)">'+candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='hired';}).length+'</div><div class="sc-days">Joined</div></div>'
+  +'<div class="sc" style="border-top:2px solid var(--red)"><div class="sc-lbl" style="color:var(--red)">❌ REJTD</div><div class="sc-num" style="color:var(--red)">'+candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='rejected';}).length+'</div><div class="sc-days">Not selected</div></div>';
+}
+
+function filterCands(stage){
+  candFilt=stage;
+  document.querySelectorAll('#candFilterBtns .fb').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-f')===stage);});
+  renderCandTable();
+}
+
+// ══════════════════════════════════════
+// CANDIDATE TABLE
+// ══════════════════════════════════════
+function renderCandTable(){
+  var q=document.getElementById('candSrch').value.toLowerCase();
+  var data=candidates.filter(function(c){
+    if(candFilt!=='All'&&candFilt!=='Hired'&&candFilt!=='Rejected'){var cs=CAND_STEPS[c.pipeline?c.pipeline.currentStep:0];if(!cs||cs.name!==candFilt)return false;}
+    if(candFilt==='Hired'&&(!c.pipeline||c.pipeline.status!=='hired'))return false;
+    if(candFilt==='Rejected'&&(!c.pipeline||c.pipeline.status!=='rejected'))return false;
+    if(q){var s=(c.name+' '+(c.mobile||'')+' '+(c.email||'')).toLowerCase();if(s.indexOf(q)<0)return false;}
+    return true;
+  });
+  var tbl=document.getElementById('candTbl'),empty=document.getElementById('candEmpty');
+  if(!data.length){tbl.style.display='none';empty.style.display='block';return;}
+  tbl.style.display='';empty.style.display='none';
+  document.getElementById('candTbody').innerHTML=data.map(function(c,i){
+    var curIdx=c.pipeline?c.pipeline.currentStep:0;var cs=CAND_STEPS[curIdx]||CAND_STEPS[0];
+    var ps=getCandStatus(c);
+    var dots=CAND_STEPS.map(function(s,si){var st=c.pipeline?c.pipeline.steps[s.id]:null;var cls=st&&st.status==='done'?'done':si===curIdx?'active':'';return'<div class="pd '+cls+'" title="'+s.name+'">'+(st&&st.status==='done'?'✓':si===curIdx?'●':'')+'</div>';}).join('');
+    var job=jobs.find(function(j){return j.id===c.jobId;});
+    var dobj=c.date?new Date(c.date):null;var ds=dobj?(dobj.getDate()+' '+MON[dobj.getMonth()]):'—';
+    return'<tr onclick="openCandPipeline(\''+c.id+'\')">'
+      +'<td style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--dim)">'+(i+1)+'</td>'
+      +'<td style="font-family:JetBrains Mono,monospace;font-size:10px;color:var(--sub)">'+ds+'</td>'
+      +'<td><div class="td-name">'+escHtml(c.name)+'</div><div class="td-sub">'+(c.mobile||'—')+'</div></td>'
+      +'<td><div style="font-size:11px">'+escHtml(job?job.title:'—')+'</div><div class="td-sub">'+(c.exp?c.exp+' yrs':'')+'</div></td>'
+      +'<td><div style="font-size:11px;color:'+cs.color+'">'+cs.icon+' '+cs.name+'</div></td>'
+      +'<td><div class="prog-dots">'+dots+'</div></td>'
+      +'<td><span class="status-badge '+ps.cls+'">'+ps.txt+'</span></td>'
+      +'</tr>';
+  }).join('');
+}
+
+// ══════════════════════════════════════
+// DASHBOARD
+// ══════════════════════════════════════
+function buildDash(){
+  var hired=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='hired';}).length;
+  var rejected=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='rejected';}).length;
+  var inInterview=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='active';}).length;
+  document.getElementById('dk0').textContent=jobs.length;
+  document.getElementById('dk1').textContent=candidates.length;
+  document.getElementById('dk2').textContent=hired;
+  document.getElementById('dk3').textContent=rejected;
+  document.getElementById('dk4').textContent=inInterview;
+
+  // Job pipeline dist
+  var jc=['var(--cyan)','var(--purple)','var(--blue)','var(--green)'];
+  document.getElementById('jobPipelineDist').innerHTML=JOB_STEPS.map(function(s,i){
+    var cnt=jobs.filter(function(j){return j.pipeline&&JOB_STEPS[j.pipeline.currentStep]&&JOB_STEPS[j.pipeline.currentStep].id===s.id;}).length;
+    var pct=jobs.length>0&&cnt>0?Math.max((cnt/jobs.length)*100,5):0;
+    return'<div class="fn-row"><div class="fn-lbl">'+s.icon+' '+s.id+'</div><div class="fn-bar"><div class="fn-fill" style="width:'+pct+'%;background:'+s.color+'">'+(cnt>1?cnt:'')+'</div></div><div class="fn-cnt" style="color:'+s.color+'">'+cnt+'</div></div>';
+  }).join('')||'<div style="color:var(--dim);font-size:11px">No jobs yet</div>';
+
+  // Candidate stage dist
+  var allStages=CAND_STEPS.concat([{id:'HIRED',name:'Hired',icon:'✅',color:'var(--green)'},{id:'REJ',name:'Rejected',icon:'❌',color:'var(--red)'}]);
+  document.getElementById('candStageDist').innerHTML=allStages.map(function(s){
+    var cnt;
+    if(s.id==='HIRED')cnt=hired;
+    else if(s.id==='REJ')cnt=rejected;
+    else cnt=candidates.filter(function(c){return c.pipeline&&CAND_STEPS[c.pipeline.currentStep]&&CAND_STEPS[c.pipeline.currentStep].id===s.id;}).length;
+    var pct=candidates.length>0&&cnt>0?Math.max((cnt/candidates.length)*100,5):0;
+    return'<div class="fn-row"><div class="fn-lbl">'+s.icon+' '+s.id+'</div><div class="fn-bar"><div class="fn-fill" style="width:'+pct+'%;background:'+s.color+'">'+(cnt>1?cnt:'')+'</div></div><div class="fn-cnt" style="color:'+s.color+'">'+cnt+'</div></div>';
+  }).join('')||'<div style="color:var(--dim);font-size:11px">No candidates yet</div>';
+
+  // Dept breakdown
+  var dm={};jobs.forEach(function(j){var d=j.department||'Other';dm[d]=(dm[d]||0)+1;});
+  var sorted=Object.entries(dm).sort(function(a,b){return b[1]-a[1];});var mx=sorted[0]?sorted[0][1]:1;
+  var dc=['var(--purple)','var(--cyan)','var(--gold)','var(--green)','var(--orange)','var(--red)'];
+  document.getElementById('deptBreak').innerHTML=sorted.length?sorted.map(function(en,i){return'<div class="fn-row"><div class="fn-lbl">'+en[0].slice(0,10)+'</div><div class="fn-bar"><div class="fn-fill" style="width:'+(en[1]/mx*100)+'%;background:'+dc[i%dc.length]+'">'+(en[1]>2?en[1]:'')+'</div></div><div class="fn-cnt" style="color:'+dc[i%dc.length]+'">'+en[1]+'</div></div>';}).join(''):'<div style="color:var(--dim);font-size:11px">No data</div>';
+
+  // Recent activity
+  var ra=candidates.slice(-5).reverse();
+  document.getElementById('recentAct').innerHTML=ra.length?ra.map(function(c){var cs=CAND_STEPS[c.pipeline?c.pipeline.currentStep:0]||CAND_STEPS[0];return'<div class="act-item"><div class="act-dot" style="background:'+cs.color+'"></div><div class="act-time">'+fmtDate(c.date)+'</div><div class="act-txt">'+escHtml(c.name)+' — <span style="color:var(--purple)">'+cs.name+'</span></div></div>';}).join(''):'<div style="color:var(--dim);font-size:11px">No recent activity</div>';
+}
+
+// ══════════════════════════════════════
+// ADD JOB
+// ══════════════════════════════════════
+function openAddJob(j){
+  if(READ_ONLY.includes(currentRole)){showToast('View only','e');return;}
+  editingJobId=j?j.id:null;
+  document.getElementById('addJobTitle').innerHTML=j?'Edit <span>Job Posting</span>':'New <span>Job Posting</span>';
+  ['title','dept','loc','indent','salary','exp','qual','resp','info','assign'].forEach(function(k){var el=document.getElementById('j-'+k);if(el)el.value=j?(j[k==='dept'?'department':k==='salary'?'salary':k==='assign'?'assign':k]||''):'';});
+  document.getElementById('j-date').value=j?(j.date||today()):today();
+  openMo('addJobMo');
+}
+function saveJob(){
+  var title=document.getElementById('j-title').value.trim();
+  if(!title){showToast('⚠ Job Title required','e');return;}
+  var isEdit=!!editingJobId,existing=isEdit?jobs.find(function(j){return j.id===editingJobId;}):null;
+  var job={id:editingJobId||'J'+Date.now(),title:title,department:document.getElementById('j-dept').value.trim(),location:document.getElementById('j-loc').value.trim(),indent:document.getElementById('j-indent').value.trim(),salary:document.getElementById('j-salary').value.trim(),exp:document.getElementById('j-exp').value.trim(),qual:document.getElementById('j-qual').value.trim(),resp:document.getElementById('j-resp').value.trim(),info:document.getElementById('j-info').value.trim(),assign:document.getElementById('j-assign').value.trim(),date:document.getElementById('j-date').value||today(),pipeline:existing?existing.pipeline:initJobPipeline(document.getElementById('j-date').value||today())};
+  closeMo('addJobMo');
+  saveJobSB(job,function(){
+    if(isEdit)jobs=jobs.map(function(j){return j.id===editingJobId?job:j;});else jobs.push(job);
+    buildAll();showToast(isEdit?'✓ Job updated':'✓ Job created!','s');
+    if(!isEdit)setTimeout(function(){openJobPipeline(job.id);},300);
+  });
+}
+
+// ══════════════════════════════════════
+// ADD CANDIDATE
+// ══════════════════════════════════════
+function openAddCand(c){
+  if(READ_ONLY.includes(currentRole)){showToast('View only','e');return;}
+  editingCandId=c?c.id:null;
+  document.getElementById('addCandTitle').innerHTML=c?'Edit <span>Candidate</span>':'New <span>Candidate</span>';
+  ['name','mobile','email','qual','exp','source','addr','resume'].forEach(function(k){var el=document.getElementById('c-'+k);if(el)el.value=c?(c[k]||''):'';});
+  document.getElementById('c-curr-sal').value=c?(c.currSal||''):'';
+  document.getElementById('c-exp-sal').value=c?(c.expSal||''):'';
+  document.getElementById('c-notice').value=c?(c.notice||''):'';
+  document.getElementById('c-company').value=c?(c.company||''):'';
+  document.getElementById('c-date').value=c?(c.date||today()):today();
+  // Populate job dropdown
+  var sel=document.getElementById('c-job');
+  sel.innerHTML='<option value="">-- Select Job --</option>'+jobs.map(function(j){return'<option value="'+j.id+'" '+(c&&c.jobId===j.id?'selected':'')+'>'+escHtml(j.title)+' ('+escHtml(j.department||'—')+')</option>';}).join('');
+  openMo('addCandMo');
+}
+function saveCand(){
+  var name=document.getElementById('c-name').value.trim();
+  if(!name){showToast('⚠ Candidate Name required','e');return;}
+  var isEdit=!!editingCandId,existing=isEdit?candidates.find(function(c){return c.id===editingCandId;}):null;
+  var cand={id:editingCandId||'C'+Date.now(),name:name,mobile:document.getElementById('c-mobile').value.trim(),email:document.getElementById('c-email').value.trim(),jobId:document.getElementById('c-job').value||'',qual:document.getElementById('c-qual').value.trim(),exp:document.getElementById('c-exp').value.trim(),currSal:document.getElementById('c-curr-sal').value.trim(),expSal:document.getElementById('c-exp-sal').value.trim(),notice:document.getElementById('c-notice').value.trim(),company:document.getElementById('c-company').value.trim(),source:document.getElementById('c-source').value.trim(),addr:document.getElementById('c-addr').value.trim(),resume:document.getElementById('c-resume').value.trim(),date:document.getElementById('c-date').value||today(),pipeline:existing?existing.pipeline:initCandPipeline(document.getElementById('c-date').value||today())};
+  closeMo('addCandMo');
+  saveCandSB(cand,function(){
+    if(isEdit)candidates=candidates.map(function(c){return c.id===editingCandId?cand:c;});else candidates.push(cand);
+    buildAll();showToast(isEdit?'✓ Candidate updated':'✓ Candidate added!','s');
+    if(!isEdit)setTimeout(function(){openCandPipeline(cand.id);},300);
+  });
+}
+
+// ══════════════════════════════════════
+// JOB PIPELINE
+// ══════════════════════════════════════
+function getJob(){return jobs.find(function(x){return x.id===viewingJobId;})||null;}
+function openJobPipeline(id){
+  viewingJobId=id;var j=getJob();if(!j)return;
+  document.getElementById('jobPipeTitle').innerHTML=escHtml(j.title)+' <span>Pipeline</span>';
+  var ps=getJobStatus(j);
+  document.getElementById('jobPipeHdr').innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px"><div><div class="ph-name">'+escHtml(j.title)+'</div><div class="ph-meta"><div class="ph-m">🏢 <span>'+escHtml(j.department||'—')+'</span></div>'+(j.location?'<div class="ph-m">📍 <span>'+escHtml(j.location)+'</span></div>':'')+'<div class="ph-m">💰 <span>'+escHtml(j.salary||'—')+'</span></div>'+(j.assign?'<div class="ph-m">👤 <span>'+escHtml(j.assign)+'</span></div>':'')+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--gold);padding:3px 8px;border-radius:5px;background:var(--gold2);border:1px solid rgba(255,184,0,.2)">'+(j.indent||'—')+'</span><span class="status-badge '+ps.cls+'">'+ps.txt+'</span></div></div>'+(j.resp?'<div style="margin-top:10px;padding:8px 10px;background:var(--s4);border-radius:6px;font-size:11px;color:var(--sub)">📋 '+escHtml(j.resp)+'</div>':'');
+  buildJobFlow(j);openMo('jobPipeMo');
+}
+function buildJobFlow(j){
+  var p=j.pipeline,fs=document.getElementById('jobFlowSteps');fs.innerHTML='';
+  var ro=READ_ONLY.includes(currentRole);
+  JOB_STEPS.forEach(function(s,i){
+    var st=p.steps[s.id]||{};var isDone=st.status==='done';var isActive=p.currentStep===i;var isLocked=p.currentStep<i&&!isDone;
+    var card=document.createElement('div');
+    card.className='step-card'+(isActive?' active-s':'')+(isDone?' done-s':'')+(isLocked?' locked-s':'');
+    if(isActive||isDone)card.classList.add('open');
+    var delayBadge='<span class="delay-pill dp-pend">Pending</span>';
+    if(isDone&&st.actual&&st.planned){if(st.actual<=st.planned)delayBadge='<span class="delay-pill dp-ok">✓ On time</span>';else delayBadge='<span class="delay-pill dp-late">Delayed</span>';}
+    var bodyHtml='<div class="sb-row two"><div class="fg"><label class="fl">Planned Date</label><input class="fi" type="date" id="jsf-'+s.id+'-planned" value="'+(st.planned||'')+'" '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div><div class="fg"><label class="fl">Actual Date</label><input class="fi" type="date" id="jsf-'+s.id+'-actual" value="'+(st.actual||'')+'" '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';
+    bodyHtml+='<div style="margin-bottom:10px">'+delayBadge+'</div>';
+
+    // Special fields per step
+    if(s.id==='JD'){bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">JD Link / Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Google Doc link or notes..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';}
+    else if(s.id==='POST'){bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Posted On (portals)</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Indeed, Naukri, LinkedIn..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';}
+    else if(s.id==='SCREEN'){bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Resumes Received / Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="No. of resumes, shortlisted candidates..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';}
+    else{bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Notes..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';}
+
+    if(isActive&&!isDone&&!ro&&p.status==='active'){
+      bodyHtml+='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">'
+        +'<button class="da-btn green" data-jid="'+s.id+'" data-jidx="'+i+'">✓ Mark Done → '+(JOB_STEPS[i+1]?JOB_STEPS[i+1].id:'Complete')+'</button>'
+        +'</div>';
+      if(s.isEnd){bodyHtml='<div style="padding:10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:8px;color:var(--green);font-size:12px;margin-top:8px">Position Closed / Filled — mark done to complete</div>'+bodyHtml;}
+    }
+    if(isDone){bodyHtml+='<div style="padding:8px 10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:7px;color:var(--green);font-size:11px;margin-top:8px">✅ Completed on '+fmtDate(st.actual||st.planned)+'</div>';}
+    card.innerHTML='<div class="step-head" onclick="toggleStep(this)"><div class="sh-left"><div class="s-icon" style="background:'+s.cbg+';color:'+s.color+'">'+s.icon+'</div><div><div class="s-num" style="color:'+s.color+'">'+s.id+' · '+(s.days>0?s.days+'d':'FINAL')+'</div><div class="s-name">'+s.name+'</div></div></div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--dim)">📅 '+(st.planned?fmtDate(st.planned):'TBD')+'</span><span class="ssb '+(isDone?'ssb-d':isActive?'ssb-a':'ssb-p')+'">'+(isDone?'✓ Done':isActive?'● Active':'○ Pending')+'</span><span class="chev">▾</span></div></div><div class="step-body">'+bodyHtml+'</div>';
+    fs.appendChild(card);
+    if(i<JOB_STEPS.length-1){var conn=document.createElement('div');conn.className='conn';conn.innerHTML='<div style="text-align:center;color:var(--dim);font-size:14px;padding:2px 0">↓</div>';fs.appendChild(conn);}
+  });
+  setTimeout(function(){document.querySelectorAll('.da-btn.green[data-jid]').forEach(function(btn){btn.onclick=function(){markJobStepDone(btn.getAttribute('data-jid'),parseInt(btn.getAttribute('data-jidx')));};});},50);
+}
+function saveJobStepField(sid){
+  var j=getJob();if(!j)return;
+  var pf=document.getElementById('jsf-'+sid+'-planned');var af=document.getElementById('jsf-'+sid+'-actual');var nf=document.getElementById('jsf-'+sid+'-notes');
+  if(pf)j.pipeline.steps[sid].planned=pf.value;if(af)j.pipeline.steps[sid].actual=af.value;if(nf)j.pipeline.steps[sid].notes=nf.value;
+  jobs=jobs.map(function(x){return x.id===viewingJobId?j:x;});
+  saveJobSB(j,function(){renderJobTable();renderJobStageBar();});
+}
+function markJobStepDone(sid,idx){
+  var j=getJob();if(!j)return;
+  var af=document.getElementById('jsf-'+sid+'-actual');
+  j.pipeline.steps[sid].actual=af&&af.value?af.value:today();j.pipeline.steps[sid].status='done';
+  if(idx<JOB_STEPS.length-1){j.pipeline.currentStep=idx+1;showToast('✓ '+sid+' done → '+JOB_STEPS[idx+1].id,'s');}
+  else{j.pipeline.status='closed';showToast('🎉 Job position closed!','s');}
+  jobs=jobs.map(function(x){return x.id===viewingJobId?j:x;});
+  saveJobSB(j,function(){buildAll();setTimeout(function(){openJobPipeline(viewingJobId);},200);});
+}
+function deleteJob(){if(!confirm('Delete this job posting?'))return;sbFetch('/hr_jobs?id=eq.'+viewingJobId,'DELETE').then(function(){jobs=jobs.filter(function(j){return j.id!==viewingJobId;});closeMo('jobPipeMo');buildAll();showToast('Job deleted','e');}).catch(function(e){showToast('Delete failed','e');});}
+function editJob(){var j=getJob();closeMo('jobPipeMo');setTimeout(function(){openAddJob(j);},100);}
+
+// ══════════════════════════════════════
+// CANDIDATE PIPELINE
+// ══════════════════════════════════════
+function getCand(){return candidates.find(function(x){return x.id===viewingCandId;})||null;}
+function openCandPipeline(id){
+  viewingCandId=id;var c=getCand();if(!c)return;
+  var job=jobs.find(function(j){return j.id===c.jobId;});
+  var ps=getCandStatus(c);
+  document.getElementById('candPipeTitle').innerHTML=escHtml(c.name)+' <span>Pipeline</span>';
+  document.getElementById('candPipeHdr').innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px"><div><div class="ph-name">'+escHtml(c.name)+'</div><div class="ph-meta"><div class="ph-m">📞 <span>'+escHtml(c.mobile||'—')+'</span></div>'+(c.email?'<div class="ph-m">✉️ <span>'+escHtml(c.email)+'</span></div>':'')+'<div class="ph-m">💼 <span>'+escHtml(job?job.title:'—')+'</span></div>'+(c.exp?'<div class="ph-m">⏱ <span>'+escHtml(c.exp)+' yrs exp</span></div>':'')+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="status-badge '+ps.cls+'">'+ps.txt+'</span>'+(c.resume?'<a href="'+escHtml(c.resume)+'" target="_blank" style="font-size:10px;color:var(--cyan);text-decoration:none">📎 Resume</a>':'')+'</div></div>'+(c.currSal||c.expSal?'<div style="margin-top:10px;display:flex;gap:16px"><div style="font-size:10px;color:var(--dim)">Current: <span style="color:var(--sub)">'+escHtml(c.currSal||'—')+'</span></div><div style="font-size:10px;color:var(--dim)">Expected: <span style="color:var(--gold)">'+escHtml(c.expSal||'—')+'</span></div>'+(c.notice?'<div style="font-size:10px;color:var(--dim)">Notice: <span style="color:var(--sub)">'+escHtml(c.notice)+'</span></div>':'')+'</div>':'');
+  buildCandFlow(c);openMo('candPipeMo');
+}
+function buildCandFlow(c){
+  var p=c.pipeline,fs=document.getElementById('candFlowSteps');fs.innerHTML='';
+  var ro=READ_ONLY.includes(currentRole);
+  var isHired=p.status==='hired',isRejected=p.status==='rejected';
+
+  // Show result banner
+  if(isHired){var b=document.createElement('div');b.innerHTML='<div style="padding:12px 16px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.25);border-radius:10px;color:var(--green);font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:10px">🎉 Candidate HIRED!'+(p.joiningDate?' — Joining: '+fmtDate(p.joiningDate):'')+'</div>';fs.appendChild(b);}
+  if(isRejected){var b2=document.createElement('div');b2.innerHTML='<div style="padding:12px 16px;background:rgba(255,68,68,.06);border:1px solid rgba(255,68,68,.2);border-radius:10px;color:var(--red);font-size:13px;font-weight:600;margin-bottom:12px">❌ Candidate Rejected'+(p.rejReason?' — '+escHtml(p.rejReason):'')+'</div>';fs.appendChild(b2);}
+
+  CAND_STEPS.forEach(function(s,i){
+    var st=p.steps[s.id]||{};var isDone=st.status==='done';var isActive=p.currentStep===i&&!isHired&&!isRejected;var isLocked=p.currentStep<i&&!isDone;
+    var card=document.createElement('div');
+    card.className='step-card'+(isActive?' active-s':'')+(isDone?' done-s':'')+(isLocked?' locked-s':'');
+    if(isActive||isDone)card.classList.add('open');
+    var delayBadge='<span class="delay-pill dp-pend">Pending</span>';
+    if(isDone&&st.actual&&st.planned){if(st.actual<=st.planned)delayBadge='<span class="delay-pill dp-ok">✓ On time</span>';else delayBadge='<span class="delay-pill dp-late">Delayed</span>';}
+    var bodyHtml='<div class="sb-row two"><div class="fg"><label class="fl">Planned Date</label><input class="fi" type="date" id="csf-'+s.id+'-planned" value="'+(st.planned||'')+'" '+(ro?'disabled':'')+' onchange="saveCandStepField(\''+s.id+'\')"></div><div class="fg"><label class="fl">Actual Date</label><input class="fi" type="date" id="csf-'+s.id+'-actual" value="'+(st.actual||'')+'" '+(ro?'disabled':'')+' onchange="saveCandStepField(\''+s.id+'\')"></div></div>';
+    bodyHtml+='<div style="margin-bottom:10px">'+delayBadge+'</div>';
+    // Special notes per step
+    var notePlaceholder='Notes for this stage...';
+    if(s.id==='TEL')notePlaceholder='Telephonic call notes, availability confirmed...';
+    else if(s.id==='TECH')notePlaceholder='Technical interview feedback, skill assessment...';
+    else if(s.id==='MD')notePlaceholder='MD interview notes, candidate impression...';
+    else if(s.id==='FINALHR')notePlaceholder='Salary negotiation, joining date, company policies discussed...';
+    else if(s.id==='OFFER')notePlaceholder='Offer letter details, salary offered, accepted/negotiating...';
+    else if(s.id==='ONBOARD')notePlaceholder='Document verification, joining date, onboarding status...';
+    bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Notes</label><input class="fi" id="csf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="'+notePlaceholder+'" '+(ro?'disabled':'')+' onchange="saveCandStepField(\''+s.id+'\')"></div></div>';
+
+    if(isActive&&!ro){
+      bodyHtml+='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">';
+      if(!s.isEnd){bodyHtml+='<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'">✓ Pass → '+CAND_STEPS[i+1].id+'</button>';}
+      else{bodyHtml+='<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'" data-final="hire">🎉 Mark as HIRED</button>';}
+      bodyHtml+='<button class="da-btn red" onclick="showRejectForm(\''+s.id+'\')">❌ Reject</button></div>';
+      bodyHtml+='<div class="lh-form" id="rej-form-'+s.id+'">'
+        +'<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--red);letter-spacing:1px;margin-bottom:8px">❌ REJECT CANDIDATE</div>'
+        +'<div class="lh-label">Reason for Rejection</div>'
+        +'<select class="fs" id="rej-reason-'+s.id+'" style="margin-bottom:8px"><option value="">Select reason...</option><option>Skills not matching</option><option>Salary expectation too high</option><option>Failed technical test</option><option>Not culturally fit</option><option>Candidate withdrew</option><option>Better candidate selected</option><option>Position on hold</option><option>Other</option></select>'
+        +'<div class="lh-row"><button class="da-btn red" onclick="confirmReject(\''+s.id+'\')">Confirm Reject</button><button class="da-btn" onclick="hideRejForm(\''+s.id+'\')">Cancel</button></div>'
+        +'</div>';
+    }
+    if(isHired||isRejected){bodyHtml+='<div style="padding:8px 10px;background:var(--s3);border-radius:7px;font-size:11px;color:var(--dim);margin-top:8px">'+(isHired?'✅ Hired':'❌ Rejected')+(isRejected&&p.rejReason?' — '+escHtml(p.rejReason):'')+'</div>';}
+    if(isDone){bodyHtml+='<div style="padding:8px 10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:7px;color:var(--green);font-size:11px;margin-top:8px">✅ Passed on '+fmtDate(st.actual||st.planned)+'</div>';}
+    card.innerHTML='<div class="step-head" onclick="toggleStep(this)"><div class="sh-left"><div class="s-icon" style="background:'+s.cbg+';color:'+s.color+'">'+s.icon+'</div><div><div class="s-num" style="color:'+s.color+'">'+s.id+' · '+(s.days>0?s.days+'d':'FINAL')+'</div><div class="s-name">'+s.name+'</div></div></div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--dim)">📅 '+(st.planned?fmtDate(st.planned):'TBD')+'</span><span class="ssb '+(isDone?'ssb-d':isActive?'ssb-a':'ssb-p')+'">'+(isDone?'✓ Pass':isActive?'● Active':'○ Pending')+'</span><span class="chev">▾</span></div></div><div class="step-body">'+bodyHtml+'</div>';
+    fs.appendChild(card);
+    if(i<CAND_STEPS.length-1){var conn=document.createElement('div');conn.className='conn';conn.innerHTML='<div style="text-align:center;color:var(--dim);font-size:14px;padding:2px 0">↓</div>';fs.appendChild(conn);}
+  });
+  setTimeout(function(){
+    document.querySelectorAll('.da-btn.green[data-cid]').forEach(function(btn){
+      btn.onclick=function(){
+        var final=btn.getAttribute('data-final');
+        if(final==='hire')markCandHired(btn.getAttribute('data-cid'),parseInt(btn.getAttribute('data-cidx')));
+        else markCandStepDone(btn.getAttribute('data-cid'),parseInt(btn.getAttribute('data-cidx')));
+      };
+    });
+  },50);
+}
+function saveCandStepField(sid){
+  var c=getCand();if(!c)return;
+  var pf=document.getElementById('csf-'+sid+'-planned');var af=document.getElementById('csf-'+sid+'-actual');var nf=document.getElementById('csf-'+sid+'-notes');
+  if(pf)c.pipeline.steps[sid].planned=pf.value;if(af)c.pipeline.steps[sid].actual=af.value;if(nf)c.pipeline.steps[sid].notes=nf.value;
+  candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
+  saveCandSB(c,function(){renderCandTable();renderCandStageBar();});
+}
+function markCandStepDone(sid,idx){
+  var c=getCand();if(!c)return;
+  var af=document.getElementById('csf-'+sid+'-actual');
+  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();c.pipeline.steps[sid].status='done';
+  c.pipeline.currentStep=idx+1;
+  showToast('✓ '+sid+' passed → '+CAND_STEPS[idx+1].id,'s');
+  candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
+  saveCandSB(c,function(){buildAll();setTimeout(function(){openCandPipeline(viewingCandId);},200);});
+}
+function markCandHired(sid,idx){
+  var c=getCand();if(!c)return;
+  var af=document.getElementById('csf-'+sid+'-actual');
+  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();c.pipeline.steps[sid].status='done';
+  c.pipeline.status='hired';c.pipeline.result='hired';
+  candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
+  saveCandSB(c,function(){buildAll();showToast('🎉 Candidate marked as HIRED!','s');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
+}
+function showRejectForm(sid){document.querySelectorAll('.lh-form').forEach(function(f){f.classList.remove('show');});var el=document.getElementById('rej-form-'+sid);if(el)el.classList.add('show');}
+function hideRejForm(sid){var el=document.getElementById('rej-form-'+sid);if(el)el.classList.remove('show');}
+function confirmReject(sid){
+  var r=document.getElementById('rej-reason-'+sid);var reason=r?r.value:'';if(!reason){showToast('Please select a reason','e');return;}
+  var c=getCand();if(!c)return;
+  c.pipeline.status='rejected';c.pipeline.result='rejected';c.pipeline.rejReason=reason;
+  candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
+  saveCandSB(c,function(){buildAll();showToast('Candidate rejected','e');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
+}
+function deleteCand(){if(!confirm('Delete this candidate?'))return;sbFetch('/hr_candidates?id=eq.'+viewingCandId,'DELETE').then(function(){candidates=candidates.filter(function(c){return c.id!==viewingCandId;});closeMo('candPipeMo');buildAll();showToast('Candidate deleted','e');}).catch(function(e){showToast('Delete failed','e');});}
+function editCand(){var c=getCand();closeMo('candPipeMo');setTimeout(function(){openAddCand(c);},100);}
+
+// ══════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════
+function toggleStep(h){h.closest('.step-card').classList.toggle('open');}
+function openMo(id){document.getElementById(id).classList.add('open');}
+function closeMo(id){document.getElementById(id).classList.remove('open');}
+function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'s')+' show';setTimeout(function(){t.classList.remove('show');},3200);}
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+window.onload=function(){
+  document.getElementById('passInput').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
+  document.getElementById('enterBtn').addEventListener('click',doLogin);
+  document.getElementById('passToggle').addEventListener('click',function(){var i=document.getElementById('passInput');i.type=i.type==='password'?'text':'password';});
+  document.getElementById('logoutBtn').addEventListener('click',doLogout);
+  document.getElementById('nav-dash').addEventListener('click',function(){showView('dash');});
+  document.getElementById('nav-jobs').addEventListener('click',function(){showView('jobs');});
+  document.getElementById('nav-candidates').addEventListener('click',function(){showView('candidates');});
+  document.getElementById('addPillBtn').addEventListener('click',function(){if(document.getElementById('view-candidates').classList.contains('active'))openAddCand(null);else openAddJob(null);});
+  document.getElementById('addJobBtn').addEventListener('click',function(){openAddJob(null);});
+  document.getElementById('addCandBtn').addEventListener('click',function(){openAddCand(null);});
+  document.getElementById('emptyJobBtn').addEventListener('click',function(){openAddJob(null);});
+  document.getElementById('emptyCandBtn').addEventListener('click',function(){openAddCand(null);});
+  document.getElementById('saveJobBtn').addEventListener('click',saveJob);
+  document.getElementById('saveCandBtn').addEventListener('click',saveCand);
+  document.getElementById('deleteJobBtn').addEventListener('click',deleteJob);
+  document.getElementById('editJobBtn').addEventListener('click',editJob);
+  document.getElementById('deleteCandBtn').addEventListener('click',deleteCand);
+  document.getElementById('editCandBtn').addEventListener('click',editCand);
+  document.querySelectorAll('#jobFilterBtns .fb').forEach(function(btn){btn.addEventListener('click',function(){jobFilt=btn.getAttribute('data-f');document.querySelectorAll('#jobFilterBtns .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');renderJobTable();});});
+  document.querySelectorAll('#candFilterBtns .fb').forEach(function(btn){btn.addEventListener('click',function(){candFilt=btn.getAttribute('data-f');document.querySelectorAll('#candFilterBtns .fb').forEach(function(b){b.classList.remove('active');});btn.classList.add('active');renderCandTable();});});
+  document.getElementById('jobSrch').addEventListener('input',renderJobTable);
+  document.getElementById('candSrch').addEventListener('input',renderCandTable);
+  document.querySelectorAll('.mo').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)o.classList.remove('open');});});
+  var saved=sessionStorage.getItem('hr_role');if(saved&&PASSWORDS[saved]){currentRole=saved;enterApp();}
+};
+</script>
+</body>
+</html>
