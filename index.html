@@ -207,10 +207,6 @@ textarea.fi{resize:vertical;min-height:60px}
 .lh-row{display:flex;gap:8px;align-items:flex-end;margin-top:8px;flex-wrap:wrap}
 .lh-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--sub);text-transform:uppercase;margin-bottom:4px}
 
-/* DB ERROR BANNER */
-.db-banner{padding:10px 16px;background:rgba(255,68,68,.08);border:1px solid rgba(255,68,68,.25);border-radius:8px;color:var(--red);font-size:11px;margin:12px 20px;display:none;align-items:center;gap:8px;}
-.db-banner.show{display:flex}
-
 /* SYNC/TOAST */
 .sync-dot{position:fixed;bottom:14px;right:14px;z-index:400;padding:5px 11px;border-radius:20px;font-size:9px;font-weight:600;display:flex;align-items:center;gap:5px;transition:all .25s;font-family:'JetBrains Mono',monospace;letter-spacing:.5px;}
 .sync-dot.saved{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);color:var(--green)}.sync-dot.saving{background:var(--gold2);border:1px solid rgba(255,184,0,.3);color:var(--gold)}.sync-dot.err{background:var(--red2);border:1px solid rgba(255,68,68,.3);color:var(--red)}
@@ -218,6 +214,11 @@ textarea.fi{resize:vertical;min-height:60px}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 18px;font-size:11px;z-index:999;opacity:0;transition:all .28s;white-space:nowrap;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.4);}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}.toast.s{border-left:3px solid var(--green)}.toast.e{border-left:3px solid var(--red)}.toast.i{border-left:3px solid var(--purple)}
+
+/* TAB SWITCHER */
+.tab-switch{display:flex;gap:6px;padding:12px 20px;background:var(--sf);border-bottom:1px solid var(--bd);}
+.tab-btn{padding:7px 18px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;}
+.tab-btn.active{background:var(--purple2);border-color:rgba(176,96,255,.4);color:var(--purple)}
 
 @media(max-width:900px){.kpi-row{grid-template-columns:repeat(3,1fr)}.dg2,.dg3{grid-template-columns:1fr}}
 </style>
@@ -267,12 +268,6 @@ textarea.fi{resize:vertical;min-height:60px}
       <button class="tb-logout" id="logoutBtn">Logout</button>
     </div>
   </div>
-
-  <!-- DB Error Banner -->
-  <div class="db-banner" id="dbBanner">
-    ⚠ <span id="dbBannerMsg">Database error. Check Supabase tables.</span>
-  </div>
-
   <div class="app-body">
 
     <!-- DASHBOARD -->
@@ -407,7 +402,7 @@ textarea.fi{resize:vertical;min-height:60px}
 
 <script>
 // ══════════════════════════════════════
-// SUPABASE CONFIG — FIXED: using correct anon JWT key
+// SUPABASE CONFIG — Same as SCM project
 // ══════════════════════════════════════
 var SUPABASE_URL='https://duckuubnszaytuuerffx.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1Y2t1dWJuc3pheXR1dWVyZmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MjQ4NDMsImV4cCI6MjA4OTQwMDg0M30.Aoesp7WobjoyvQWFIIZkDpE0JIcvnX9lLlLihK0byLE';
@@ -463,6 +458,7 @@ function today(){return new Date().toISOString().split('T')[0];}
 function fmtDate(d){if(!d)return'—';var x=new Date(d);return x.getDate()+' '+MON[x.getMonth()]+' '+String(x.getFullYear()).slice(2);}
 function escHtml(t){if(!t)return'';return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function addDays(dateStr,n){var d=new Date(dateStr);d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];}
+function daysBetween(d1,d2){return Math.round((new Date(d2)-new Date(d1))/(1000*60*60*24));}
 
 function initJobPipeline(startDate){
   var sd=startDate||today();
@@ -519,8 +515,6 @@ function currentCandStage(c){
 // SUPABASE DATA LAYER
 // ══════════════════════════════════════
 function setSS(s,t){var d=document.getElementById('syncDot'),tx=document.getElementById('syncTxt');d.className='sync-dot '+s;tx.textContent=t;}
-function showDbError(msg){var b=document.getElementById('dbBanner');document.getElementById('dbBannerMsg').textContent=msg;b.classList.add('show');}
-function hideDbError(){document.getElementById('dbBanner').classList.remove('show');}
 
 function loadData(){
   setSS('saving','Loading...');
@@ -528,135 +522,26 @@ function loadData(){
     sbFetch('/hr_jobs?order=created_at.asc','GET'),
     sbFetch('/hr_candidates?order=created_at.asc','GET')
   ]).then(function(res){
-    hideDbError();
-    jobs=(res[0]||[]).map(function(r){
-      return{
-        id:r.id,title:r.title,department:r.department||'',location:r.location||'',
-        salary:r.salary_budget||'',exp:r.experience_req||'',qual:r.qualifications||'',
-        resp:r.key_responsibilities||'',info:r.additional_info||'',indent:r.indent_no||'',
-        assign:r.assigned_to||'',date:r.date||'',
-        pipeline:r.pipeline||initJobPipeline(r.date||today())
-      };
-    });
-    candidates=(res[1]||[]).map(function(r){
-      return{
-        id:r.id,name:r.name,mobile:r.mobile||'',email:r.email||'',jobId:r.job_id||'',
-        qual:r.qualifications||'',exp:r.experience||'',currSal:r.current_salary||'',
-        expSal:r.expected_salary||'',notice:r.notice_period||'',company:r.current_company||'',
-        addr:r.address||'',resume:r.resume_link||'',indent:r.indent_no||'',
-        source:r.headhunter||'',date:r.date||'',
-        pipeline:r.pipeline||initCandPipeline(r.date||today())
-      };
-    });
-    setSS('saved','✓ Loaded');
-    buildAll();
-  }).catch(function(e){
-    setSS('err','Load failed');
-    console.error('Load error:',e);
-    var msg=e.message||'';
-    // Table not found — give helpful message
-    if(msg.indexOf('does not exist')>-1||msg.indexOf('42P01')>-1){
-      showDbError('⚠ Tables not found in Supabase. Please create hr_jobs and hr_candidates tables. See console for SQL.');
-      console.log('%c📋 Run this SQL in Supabase SQL Editor:','color:orange;font-size:14px');
-      console.log(`
--- Table 1: hr_jobs
-create table if not exists hr_jobs (
-  id text primary key,
-  title text not null,
-  department text,
-  location text,
-  salary_budget text,
-  experience_req text,
-  qualifications text,
-  key_responsibilities text,
-  additional_info text,
-  indent_no text,
-  assigned_to text,
-  date date,
-  pipeline jsonb,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
-alter table hr_jobs enable row level security;
-create policy "Allow all" on hr_jobs for all using (true) with check (true);
-
--- Table 2: hr_candidates
-create table if not exists hr_candidates (
-  id text primary key,
-  name text not null,
-  mobile text,
-  email text,
-  job_id text,
-  qualifications text,
-  experience text,
-  current_salary text,
-  expected_salary text,
-  notice_period text,
-  current_company text,
-  address text,
-  resume_link text,
-  indent_no text,
-  headhunter text,
-  date date,
-  pipeline jsonb,
-  created_at timestamptz default now(),
-  updated_at timestamptz default now()
-);
-alter table hr_candidates enable row level security;
-create policy "Allow all" on hr_candidates for all using (true) with check (true);
-      `);
-    } else {
-      showDbError('Database error: '+msg.substring(0,120));
-    }
-    showToast('Load failed — check console','e');
-  });
+    jobs=(res[0]||[]).map(function(r){return{id:r.id,title:r.title,department:r.department||'',location:r.location||'',salary:r.salary_budget||'',exp:r.experience_req||'',qual:r.qualifications||'',resp:r.key_responsibilities||'',info:r.additional_info||'',indent:r.indent_no||'',assign:r.assigned_to||'',date:r.date||'',pipeline:r.pipeline||initJobPipeline(r.date||today())};});
+    candidates=(res[1]||[]).map(function(r){return{id:r.id,name:r.name,mobile:r.mobile||'',email:r.email||'',jobId:r.job_id||'',qual:r.qualifications||'',exp:r.experience||'',currSal:r.current_salary||'',expSal:r.expected_salary||'',notice:r.notice_period||'',company:r.current_company||'',addr:r.address||'',resume:r.resume_link||'',indent:r.indent_no||'',source:r.headhunter||'',date:r.date||'',pipeline:r.pipeline||initCandPipeline(r.date||today())};});
+    setSS('saved','✓ Loaded');buildAll();
+  }).catch(function(e){setSS('err','Load failed');console.error(e);showToast('Load failed: '+e.message,'e');});
 }
 
 function saveJobSB(job,cb){
   setSS('saving','Saving...');
-  var row={
-    id:job.id,title:job.title,department:job.department||'',location:job.location||'',
-    salary_budget:job.salary||'',experience_req:job.exp||'',qualifications:job.qual||'',
-    key_responsibilities:job.resp||'',additional_info:job.info||'',indent_no:job.indent||'',
-    assigned_to:job.assign||'',date:job.date||today(),
-    pipeline:job.pipeline,updated_at:new Date().toISOString()
-  };
+  var row={id:job.id,title:job.title,department:job.department||'',location:job.location||'',salary_budget:job.salary||'',experience_req:job.exp||'',qualifications:job.qual||'',key_responsibilities:job.resp||'',additional_info:job.info||'',indent_no:job.indent||'',assigned_to:job.assign||'',date:job.date||today(),pipeline:job.pipeline,updated_at:new Date().toISOString()};
   sbFetch('/hr_jobs?on_conflict=id','POST',row)
-    .then(function(){setSS('saved','✓ Saved');hideDbError();if(typeof cb==='function')cb();})
-    .catch(function(e){
-      // Try PATCH fallback
-      sbFetch('/hr_jobs?id=eq.'+job.id,'PATCH',{pipeline:job.pipeline,title:job.title,department:job.department,updated_at:new Date().toISOString()})
-        .then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();})
-        .catch(function(e2){
-          setSS('err','Save failed');
-          console.error('Save job error:',e2);
-          showToast('Save failed: '+e2.message.substring(0,80),'e');
-        });
-    });
+    .then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();})
+    .catch(function(){sbFetch('/hr_jobs?id=eq.'+job.id,'PATCH',{pipeline:job.pipeline,updated_at:new Date().toISOString()}).then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();}).catch(function(e){setSS('err','Save failed');console.error(e);});});
 }
 
 function saveCandSB(cand,cb){
   setSS('saving','Saving...');
-  var row={
-    id:cand.id,name:cand.name,mobile:cand.mobile||'',email:cand.email||'',
-    job_id:cand.jobId||null,qualifications:cand.qual||'',experience:cand.exp||'',
-    current_salary:cand.currSal||'',expected_salary:cand.expSal||'',
-    notice_period:cand.notice||'',current_company:cand.company||'',
-    address:cand.addr||'',resume_link:cand.resume||'',indent_no:cand.indent||'',
-    headhunter:cand.source||'',date:cand.date||today(),
-    pipeline:cand.pipeline,updated_at:new Date().toISOString()
-  };
+  var row={id:cand.id,name:cand.name,mobile:cand.mobile||'',email:cand.email||'',job_id:cand.jobId||null,qualifications:cand.qual||'',experience:cand.exp||'',current_salary:cand.currSal||'',expected_salary:cand.expSal||'',notice_period:cand.notice||'',current_company:cand.company||'',address:cand.addr||'',resume_link:cand.resume||'',indent_no:cand.indent||'',headhunter:cand.source||'',date:cand.date||today(),pipeline:cand.pipeline,updated_at:new Date().toISOString()};
   sbFetch('/hr_candidates?on_conflict=id','POST',row)
-    .then(function(){setSS('saved','✓ Saved');hideDbError();if(typeof cb==='function')cb();})
-    .catch(function(e){
-      sbFetch('/hr_candidates?id=eq.'+cand.id,'PATCH',{pipeline:cand.pipeline,name:cand.name,updated_at:new Date().toISOString()})
-        .then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();})
-        .catch(function(e2){
-          setSS('err','Save failed');
-          console.error('Save cand error:',e2);
-          showToast('Save failed: '+e2.message.substring(0,80),'e');
-        });
-    });
+    .then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();})
+    .catch(function(){sbFetch('/hr_candidates?id=eq.'+cand.id,'PATCH',{pipeline:cand.pipeline,updated_at:new Date().toISOString()}).then(function(){setSS('saved','✓ Saved');if(typeof cb==='function')cb();}).catch(function(e){setSS('err','Save failed');console.error(e);});});
 }
 
 function buildAll(){renderJobStageBar();renderJobTable();renderCandStageBar();renderCandTable();buildDash();updatePills();}
@@ -713,7 +598,7 @@ function showView(v){
 function renderJobStageBar(){
   document.getElementById('jobStageBar').innerHTML=JOB_STEPS.map(function(s,i){
     var cnt=jobs.filter(function(j){return j.pipeline&&JOB_STEPS[j.pipeline.currentStep]&&JOB_STEPS[j.pipeline.currentStep].id===s.id;}).length;
-    return'<div class="sc" onclick="filterJobs(\''+s.name+'\')" style="border-top:2px solid '+s.color+'"><div class="sc-lbl" style="color:'+s.color+'">'+s.icon+' '+s.id+'</div><div class="sc-num" style="color:'+s.color+'">'+cnt+'</div><div class="sc-days">'+s.name.slice(0,14)+'</div></div>';
+    return'<div class="sc" onclick="filterJobs(\''+s.name+'\')" style="border-top:2px solid '+s.color+'"><div class="sc-lbl" style="color:'+s.color+'">'+s.icon+' '+s.id+'</div><div class="sc-num" style="color:'+s.color+'">'+cnt+'</div><div class="sc-days">'+s.name.slice(0,12)+'...</div></div>';
   }).join('');
 }
 
@@ -760,7 +645,7 @@ function renderJobTable(){
 function renderCandStageBar(){
   document.getElementById('candStageBar').innerHTML=CAND_STEPS.map(function(s,i){
     var cnt=candidates.filter(function(c){return c.pipeline&&CAND_STEPS[c.pipeline.currentStep]&&CAND_STEPS[c.pipeline.currentStep].id===s.id;}).length;
-    return'<div class="sc" onclick="filterCands(\''+s.name+'\')" style="border-top:2px solid '+s.color+'"><div class="sc-lbl" style="color:'+s.color+'">'+s.icon+' '+s.id+'</div><div class="sc-num" style="color:'+s.color+'">'+cnt+'</div><div class="sc-days">'+s.name.slice(0,14)+'</div></div>';
+    return'<div class="sc" onclick="filterCands(\''+s.name+'\')" style="border-top:2px solid '+s.color+'"><div class="sc-lbl" style="color:'+s.color+'">'+s.icon+' '+s.id+'</div><div class="sc-num" style="color:'+s.color+'">'+cnt+'</div><div class="sc-days">'+s.name.slice(0,12)+'...</div></div>';
   }).join('')
   +'<div class="sc" style="border-top:2px solid var(--green)"><div class="sc-lbl" style="color:var(--green)">✅ HIRED</div><div class="sc-num" style="color:var(--green)">'+candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='hired';}).length+'</div><div class="sc-days">Joined</div></div>'
   +'<div class="sc" style="border-top:2px solid var(--red)"><div class="sc-lbl" style="color:var(--red)">❌ REJTD</div><div class="sc-num" style="color:var(--red)">'+candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='rejected';}).length+'</div><div class="sc-days">Not selected</div></div>';
@@ -851,39 +736,24 @@ function openAddJob(j){
   if(READ_ONLY.includes(currentRole)){showToast('View only','e');return;}
   editingJobId=j?j.id:null;
   document.getElementById('addJobTitle').innerHTML=j?'Edit <span>Job Posting</span>':'New <span>Job Posting</span>';
-  document.getElementById('j-title').value=j?(j.title||''):'';
-  document.getElementById('j-dept').value=j?(j.department||''):'';
-  document.getElementById('j-loc').value=j?(j.location||''):'';
-  document.getElementById('j-indent').value=j?(j.indent||''):'';
-  document.getElementById('j-salary').value=j?(j.salary||''):'';
-  document.getElementById('j-exp').value=j?(j.exp||''):'';
-  document.getElementById('j-qual').value=j?(j.qual||''):'';
-  document.getElementById('j-resp').value=j?(j.resp||''):'';
-  document.getElementById('j-info').value=j?(j.info||''):'';
-  document.getElementById('j-assign').value=j?(j.assign||''):'';
+  document.getElementById('j-title').value=j?j.title||'':'';
+  document.getElementById('j-dept').value=j?j.department||'':'';
+  document.getElementById('j-loc').value=j?j.location||'':'';
+  document.getElementById('j-indent').value=j?j.indent||'':'';
+  document.getElementById('j-salary').value=j?j.salary||'':'';
+  document.getElementById('j-exp').value=j?j.exp||'':'';
+  document.getElementById('j-qual').value=j?j.qual||'':'';
+  document.getElementById('j-resp').value=j?j.resp||'':'';
+  document.getElementById('j-info').value=j?j.info||'':'';
+  document.getElementById('j-assign').value=j?j.assign||'':'';
   document.getElementById('j-date').value=j?(j.date||today()):today();
   openMo('addJobMo');
 }
-
 function saveJob(){
   var title=document.getElementById('j-title').value.trim();
   if(!title){showToast('⚠ Job Title required','e');return;}
   var isEdit=!!editingJobId,existing=isEdit?jobs.find(function(j){return j.id===editingJobId;}):null;
-  var job={
-    id:editingJobId||'J'+Date.now(),
-    title:title,
-    department:document.getElementById('j-dept').value.trim(),
-    location:document.getElementById('j-loc').value.trim(),
-    indent:document.getElementById('j-indent').value.trim(),
-    salary:document.getElementById('j-salary').value.trim(),
-    exp:document.getElementById('j-exp').value.trim(),
-    qual:document.getElementById('j-qual').value.trim(),
-    resp:document.getElementById('j-resp').value.trim(),
-    info:document.getElementById('j-info').value.trim(),
-    assign:document.getElementById('j-assign').value.trim(),
-    date:document.getElementById('j-date').value||today(),
-    pipeline:existing?existing.pipeline:initJobPipeline(document.getElementById('j-date').value||today())
-  };
+  var job={id:editingJobId||'J'+Date.now(),title:title,department:document.getElementById('j-dept').value.trim(),location:document.getElementById('j-loc').value.trim(),indent:document.getElementById('j-indent').value.trim(),salary:document.getElementById('j-salary').value.trim(),exp:document.getElementById('j-exp').value.trim(),qual:document.getElementById('j-qual').value.trim(),resp:document.getElementById('j-resp').value.trim(),info:document.getElementById('j-info').value.trim(),assign:document.getElementById('j-assign').value.trim(),date:document.getElementById('j-date').value||today(),pipeline:existing?existing.pipeline:initJobPipeline(document.getElementById('j-date').value||today())};
   closeMo('addJobMo');
   saveJobSB(job,function(){
     if(isEdit)jobs=jobs.map(function(j){return j.id===editingJobId?job:j;});else jobs.push(job);
@@ -899,46 +769,28 @@ function openAddCand(c){
   if(READ_ONLY.includes(currentRole)){showToast('View only','e');return;}
   editingCandId=c?c.id:null;
   document.getElementById('addCandTitle').innerHTML=c?'Edit <span>Candidate</span>':'New <span>Candidate</span>';
-  document.getElementById('c-name').value=c?(c.name||''):'';
-  document.getElementById('c-mobile').value=c?(c.mobile||''):'';
-  document.getElementById('c-email').value=c?(c.email||''):'';
-  document.getElementById('c-qual').value=c?(c.qual||''):'';
-  document.getElementById('c-exp').value=c?(c.exp||''):'';
-  document.getElementById('c-source').value=c?(c.source||''):'';
-  document.getElementById('c-addr').value=c?(c.addr||''):'';
-  document.getElementById('c-resume').value=c?(c.resume||''):'';
-  document.getElementById('c-curr-sal').value=c?(c.currSal||''):'';
-  document.getElementById('c-exp-sal').value=c?(c.expSal||''):'';
-  document.getElementById('c-notice').value=c?(c.notice||''):'';
-  document.getElementById('c-company').value=c?(c.company||''):'';
+  document.getElementById('c-name').value=c?c.name||'':'';
+  document.getElementById('c-mobile').value=c?c.mobile||'':'';
+  document.getElementById('c-email').value=c?c.email||'':'';
+  document.getElementById('c-qual').value=c?c.qual||'':'';
+  document.getElementById('c-exp').value=c?c.exp||'':'';
+  document.getElementById('c-source').value=c?c.source||'':'';
+  document.getElementById('c-addr').value=c?c.addr||'':'';
+  document.getElementById('c-resume').value=c?c.resume||'':'';
+  document.getElementById('c-curr-sal').value=c?c.currSal||'':'';
+  document.getElementById('c-exp-sal').value=c?c.expSal||'':'';
+  document.getElementById('c-notice').value=c?c.notice||'':'';
+  document.getElementById('c-company').value=c?c.company||'':'';
   document.getElementById('c-date').value=c?(c.date||today()):today();
   var sel=document.getElementById('c-job');
   sel.innerHTML='<option value="">-- Select Job --</option>'+jobs.map(function(j){return'<option value="'+j.id+'" '+(c&&c.jobId===j.id?'selected':'')+'>'+escHtml(j.title)+' ('+escHtml(j.department||'—')+')</option>';}).join('');
   openMo('addCandMo');
 }
-
 function saveCand(){
   var name=document.getElementById('c-name').value.trim();
   if(!name){showToast('⚠ Candidate Name required','e');return;}
   var isEdit=!!editingCandId,existing=isEdit?candidates.find(function(c){return c.id===editingCandId;}):null;
-  var cand={
-    id:editingCandId||'C'+Date.now(),
-    name:name,
-    mobile:document.getElementById('c-mobile').value.trim(),
-    email:document.getElementById('c-email').value.trim(),
-    jobId:document.getElementById('c-job').value||'',
-    qual:document.getElementById('c-qual').value.trim(),
-    exp:document.getElementById('c-exp').value.trim(),
-    currSal:document.getElementById('c-curr-sal').value.trim(),
-    expSal:document.getElementById('c-exp-sal').value.trim(),
-    notice:document.getElementById('c-notice').value.trim(),
-    company:document.getElementById('c-company').value.trim(),
-    source:document.getElementById('c-source').value.trim(),
-    addr:document.getElementById('c-addr').value.trim(),
-    resume:document.getElementById('c-resume').value.trim(),
-    date:document.getElementById('c-date').value||today(),
-    pipeline:existing?existing.pipeline:initCandPipeline(document.getElementById('c-date').value||today())
-  };
+  var cand={id:editingCandId||'C'+Date.now(),name:name,mobile:document.getElementById('c-mobile').value.trim(),email:document.getElementById('c-email').value.trim(),jobId:document.getElementById('c-job').value||'',qual:document.getElementById('c-qual').value.trim(),exp:document.getElementById('c-exp').value.trim(),currSal:document.getElementById('c-curr-sal').value.trim(),expSal:document.getElementById('c-exp-sal').value.trim(),notice:document.getElementById('c-notice').value.trim(),company:document.getElementById('c-company').value.trim(),source:document.getElementById('c-source').value.trim(),addr:document.getElementById('c-addr').value.trim(),resume:document.getElementById('c-resume').value.trim(),date:document.getElementById('c-date').value||today(),pipeline:existing?existing.pipeline:initCandPipeline(document.getElementById('c-date').value||today())};
   closeMo('addCandMo');
   saveCandSB(cand,function(){
     if(isEdit)candidates=candidates.map(function(c){return c.id===editingCandId?cand:c;});else candidates.push(cand);
@@ -958,7 +810,6 @@ function openJobPipeline(id){
   document.getElementById('jobPipeHdr').innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px"><div><div class="ph-name">'+escHtml(j.title)+'</div><div class="ph-meta"><div class="ph-m">🏢 <span>'+escHtml(j.department||'—')+'</span></div>'+(j.location?'<div class="ph-m">📍 <span>'+escHtml(j.location)+'</span></div>':'')+'<div class="ph-m">💰 <span>'+escHtml(j.salary||'—')+'</span></div>'+(j.assign?'<div class="ph-m">👤 <span>'+escHtml(j.assign)+'</span></div>':'')+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span style="font-family:JetBrains Mono,monospace;font-size:11px;color:var(--gold);padding:3px 8px;border-radius:5px;background:var(--gold2);border:1px solid rgba(255,184,0,.2)">'+(j.indent||'—')+'</span><span class="status-badge '+ps.cls+'">'+ps.txt+'</span></div></div>'+(j.resp?'<div style="margin-top:10px;padding:8px 10px;background:var(--s4);border-radius:6px;font-size:11px;color:var(--sub)">📋 '+escHtml(j.resp)+'</div>':'');
   buildJobFlow(j);openMo('jobPipeMo');
 }
-
 function buildJobFlow(j){
   var p=j.pipeline,fs=document.getElementById('jobFlowSteps');fs.innerHTML='';
   var ro=READ_ONLY.includes(currentRole);
@@ -971,50 +822,37 @@ function buildJobFlow(j){
     if(isDone&&st.actual&&st.planned){if(st.actual<=st.planned)delayBadge='<span class="delay-pill dp-ok">✓ On time</span>';else delayBadge='<span class="delay-pill dp-late">Delayed</span>';}
     var bodyHtml='<div class="sb-row two"><div class="fg"><label class="fl">Planned Date</label><input class="fi" type="date" id="jsf-'+s.id+'-planned" value="'+(st.planned||'')+'" '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div><div class="fg"><label class="fl">Actual Date</label><input class="fi" type="date" id="jsf-'+s.id+'-actual" value="'+(st.actual||'')+'" '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';
     bodyHtml+='<div style="margin-bottom:10px">'+delayBadge+'</div>';
-    if(s.id==='JD'){bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">JD Link / Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Google Doc link or notes..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';}
-    else if(s.id==='POST'){bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Posted On (portals)</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Indeed, Naukri, LinkedIn..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';}
-    else if(s.id==='SCREEN'){bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Resumes Received / Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="No. of resumes, shortlisted candidates..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';}
-    else{bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Notes..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';}
+    if(s.id==='JD')bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">JD Link / Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Google Doc link or notes..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';
+    else if(s.id==='POST')bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Posted On (portals)</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Indeed, Naukri, LinkedIn..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';
+    else if(s.id==='SCREEN')bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Resumes Received / Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="No. of resumes, shortlisted candidates..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';
+    else bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Notes</label><input class="fi" id="jsf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="Notes..." '+(ro?'disabled':'')+' onchange="saveJobStepField(\''+s.id+'\')"></div></div>';
     if(isActive&&!isDone&&!ro&&p.status==='active'){
       bodyHtml+='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px"><button class="da-btn green" data-jid="'+s.id+'" data-jidx="'+i+'">✓ Mark Done → '+(JOB_STEPS[i+1]?JOB_STEPS[i+1].id:'Complete')+'</button></div>';
     }
-    if(isDone){bodyHtml+='<div style="padding:8px 10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:7px;color:var(--green);font-size:11px;margin-top:8px">✅ Completed on '+fmtDate(st.actual||st.planned)+'</div>';}
+    if(isDone)bodyHtml+='<div style="padding:8px 10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:7px;color:var(--green);font-size:11px;margin-top:8px">✅ Completed on '+fmtDate(st.actual||st.planned)+'</div>';
     card.innerHTML='<div class="step-head" onclick="toggleStep(this)"><div class="sh-left"><div class="s-icon" style="background:'+s.cbg+';color:'+s.color+'">'+s.icon+'</div><div><div class="s-num" style="color:'+s.color+'">'+s.id+' · '+(s.days>0?s.days+'d':'FINAL')+'</div><div class="s-name">'+s.name+'</div></div></div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--dim)">📅 '+(st.planned?fmtDate(st.planned):'TBD')+'</span><span class="ssb '+(isDone?'ssb-d':isActive?'ssb-a':'ssb-p')+'">'+(isDone?'✓ Done':isActive?'● Active':'○ Pending')+'</span><span class="chev">▾</span></div></div><div class="step-body">'+bodyHtml+'</div>';
     fs.appendChild(card);
     if(i<JOB_STEPS.length-1){var conn=document.createElement('div');conn.className='conn';conn.innerHTML='<div style="text-align:center;color:var(--dim);font-size:14px;padding:2px 0">↓</div>';fs.appendChild(conn);}
   });
   setTimeout(function(){document.querySelectorAll('.da-btn.green[data-jid]').forEach(function(btn){btn.onclick=function(){markJobStepDone(btn.getAttribute('data-jid'),parseInt(btn.getAttribute('data-jidx')));};});},50);
 }
-
 function saveJobStepField(sid){
   var j=getJob();if(!j)return;
-  var pf=document.getElementById('jsf-'+sid+'-planned');
-  var af=document.getElementById('jsf-'+sid+'-actual');
-  var nf=document.getElementById('jsf-'+sid+'-notes');
-  if(pf)j.pipeline.steps[sid].planned=pf.value;
-  if(af)j.pipeline.steps[sid].actual=af.value;
-  if(nf)j.pipeline.steps[sid].notes=nf.value;
+  var pf=document.getElementById('jsf-'+sid+'-planned');var af=document.getElementById('jsf-'+sid+'-actual');var nf=document.getElementById('jsf-'+sid+'-notes');
+  if(pf)j.pipeline.steps[sid].planned=pf.value;if(af)j.pipeline.steps[sid].actual=af.value;if(nf)j.pipeline.steps[sid].notes=nf.value;
   jobs=jobs.map(function(x){return x.id===viewingJobId?j:x;});
   saveJobSB(j,function(){renderJobTable();renderJobStageBar();});
 }
-
 function markJobStepDone(sid,idx){
   var j=getJob();if(!j)return;
   var af=document.getElementById('jsf-'+sid+'-actual');
-  j.pipeline.steps[sid].actual=af&&af.value?af.value:today();
-  j.pipeline.steps[sid].status='done';
+  j.pipeline.steps[sid].actual=af&&af.value?af.value:today();j.pipeline.steps[sid].status='done';
   if(idx<JOB_STEPS.length-1){j.pipeline.currentStep=idx+1;showToast('✓ '+sid+' done → '+JOB_STEPS[idx+1].id,'s');}
   else{j.pipeline.status='closed';showToast('🎉 Job position closed!','s');}
   jobs=jobs.map(function(x){return x.id===viewingJobId?j:x;});
   saveJobSB(j,function(){buildAll();setTimeout(function(){openJobPipeline(viewingJobId);},200);});
 }
-
-function deleteJob(){
-  if(!confirm('Delete this job posting?'))return;
-  sbFetch('/hr_jobs?id=eq.'+viewingJobId,'DELETE')
-    .then(function(){jobs=jobs.filter(function(j){return j.id!==viewingJobId;});closeMo('jobPipeMo');buildAll();showToast('Job deleted','e');})
-    .catch(function(e){showToast('Delete failed','e');});
-}
+function deleteJob(){if(!confirm('Delete this job posting?'))return;sbFetch('/hr_jobs?id=eq.'+viewingJobId,'DELETE').then(function(){jobs=jobs.filter(function(j){return j.id!==viewingJobId;});closeMo('jobPipeMo');buildAll();showToast('Job deleted','e');}).catch(function(e){showToast('Delete failed','e');});}
 function editJob(){var j=getJob();closeMo('jobPipeMo');setTimeout(function(){openAddJob(j);},100);}
 
 // ══════════════════════════════════════
@@ -1029,12 +867,11 @@ function openCandPipeline(id){
   document.getElementById('candPipeHdr').innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px"><div><div class="ph-name">'+escHtml(c.name)+'</div><div class="ph-meta"><div class="ph-m">📞 <span>'+escHtml(c.mobile||'—')+'</span></div>'+(c.email?'<div class="ph-m">✉️ <span>'+escHtml(c.email)+'</span></div>':'')+'<div class="ph-m">💼 <span>'+escHtml(job?job.title:'—')+'</span></div>'+(c.exp?'<div class="ph-m">⏱ <span>'+escHtml(c.exp)+' yrs exp</span></div>':'')+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="status-badge '+ps.cls+'">'+ps.txt+'</span>'+(c.resume?'<a href="'+escHtml(c.resume)+'" target="_blank" style="font-size:10px;color:var(--cyan);text-decoration:none">📎 Resume</a>':'')+'</div></div>'+(c.currSal||c.expSal?'<div style="margin-top:10px;display:flex;gap:16px"><div style="font-size:10px;color:var(--dim)">Current: <span style="color:var(--sub)">'+escHtml(c.currSal||'—')+'</span></div><div style="font-size:10px;color:var(--dim)">Expected: <span style="color:var(--gold)">'+escHtml(c.expSal||'—')+'</span></div>'+(c.notice?'<div style="font-size:10px;color:var(--dim)">Notice: <span style="color:var(--sub)">'+escHtml(c.notice)+'</span></div>':'')+'</div>':'');
   buildCandFlow(c);openMo('candPipeMo');
 }
-
 function buildCandFlow(c){
   var p=c.pipeline,fs=document.getElementById('candFlowSteps');fs.innerHTML='';
   var ro=READ_ONLY.includes(currentRole);
   var isHired=p.status==='hired',isRejected=p.status==='rejected';
-  if(isHired){var b=document.createElement('div');b.innerHTML='<div style="padding:12px 16px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.25);border-radius:10px;color:var(--green);font-size:13px;font-weight:600;margin-bottom:12px">🎉 Candidate HIRED!'+(p.joiningDate?' — Joining: '+fmtDate(p.joiningDate):'')+'</div>';fs.appendChild(b);}
+  if(isHired){var b=document.createElement('div');b.innerHTML='<div style="padding:12px 16px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.25);border-radius:10px;color:var(--green);font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:10px">🎉 Candidate HIRED!'+(p.joiningDate?' — Joining: '+fmtDate(p.joiningDate):'')+'</div>';fs.appendChild(b);}
   if(isRejected){var b2=document.createElement('div');b2.innerHTML='<div style="padding:12px 16px;background:rgba(255,68,68,.06);border:1px solid rgba(255,68,68,.2);border-radius:10px;color:var(--red);font-size:13px;font-weight:600;margin-bottom:12px">❌ Candidate Rejected'+(p.rejReason?' — '+escHtml(p.rejReason):'')+'</div>';fs.appendChild(b2);}
   CAND_STEPS.forEach(function(s,i){
     var st=p.steps[s.id]||{};var isDone=st.status==='done';var isActive=p.currentStep===i&&!isHired&&!isRejected;var isLocked=p.currentStep<i&&!isDone;
@@ -1055,18 +892,12 @@ function buildCandFlow(c){
     bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Notes</label><input class="fi" id="csf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="'+notePlaceholder+'" '+(ro?'disabled':'')+' onchange="saveCandStepField(\''+s.id+'\')"></div></div>';
     if(isActive&&!ro){
       bodyHtml+='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">';
-      if(!s.isEnd){bodyHtml+='<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'">✓ Pass → '+CAND_STEPS[i+1].id+'</button>';}
-      else{bodyHtml+='<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'" data-final="hire">🎉 Mark as HIRED</button>';}
+      if(!s.isEnd)bodyHtml+='<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'">✓ Pass → '+CAND_STEPS[i+1].id+'</button>';
+      else bodyHtml+='<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'" data-final="hire">🎉 Mark as HIRED</button>';
       bodyHtml+='<button class="da-btn red" onclick="showRejectForm(\''+s.id+'\')">❌ Reject</button></div>';
-      bodyHtml+='<div class="lh-form" id="rej-form-'+s.id+'">'
-        +'<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--red);letter-spacing:1px;margin-bottom:8px">❌ REJECT CANDIDATE</div>'
-        +'<div class="lh-label">Reason for Rejection</div>'
-        +'<select class="fs" id="rej-reason-'+s.id+'" style="margin-bottom:8px"><option value="">Select reason...</option><option>Skills not matching</option><option>Salary expectation too high</option><option>Failed technical test</option><option>Not culturally fit</option><option>Candidate withdrew</option><option>Better candidate selected</option><option>Position on hold</option><option>Other</option></select>'
-        +'<div class="lh-row"><button class="da-btn red" onclick="confirmReject(\''+s.id+'\')">Confirm Reject</button><button class="da-btn" onclick="hideRejForm(\''+s.id+'\')">Cancel</button></div>'
-        +'</div>';
+      bodyHtml+='<div class="lh-form" id="rej-form-'+s.id+'"><div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--red);letter-spacing:1px;margin-bottom:8px">❌ REJECT CANDIDATE</div><div class="lh-label">Reason for Rejection</div><select class="fs" id="rej-reason-'+s.id+'" style="margin-bottom:8px"><option value="">Select reason...</option><option>Skills not matching</option><option>Salary expectation too high</option><option>Failed technical test</option><option>Not culturally fit</option><option>Candidate withdrew</option><option>Better candidate selected</option><option>Position on hold</option><option>Other</option></select><div class="lh-row"><button class="da-btn red" onclick="confirmReject(\''+s.id+'\')">Confirm Reject</button><button class="da-btn" onclick="hideRejForm(\''+s.id+'\')">Cancel</button></div></div>';
     }
-    if(isHired||isRejected){bodyHtml+='<div style="padding:8px 10px;background:var(--s3);border-radius:7px;font-size:11px;color:var(--dim);margin-top:8px">'+(isHired?'✅ Hired':'❌ Rejected')+(isRejected&&p.rejReason?' — '+escHtml(p.rejReason):'')+'</div>';}
-    if(isDone){bodyHtml+='<div style="padding:8px 10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:7px;color:var(--green);font-size:11px;margin-top:8px">✅ Passed on '+fmtDate(st.actual||st.planned)+'</div>';}
+    if(isDone)bodyHtml+='<div style="padding:8px 10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:7px;color:var(--green);font-size:11px;margin-top:8px">✅ Passed on '+fmtDate(st.actual||st.planned)+'</div>';
     card.innerHTML='<div class="step-head" onclick="toggleStep(this)"><div class="sh-left"><div class="s-icon" style="background:'+s.cbg+';color:'+s.color+'">'+s.icon+'</div><div><div class="s-num" style="color:'+s.color+'">'+s.id+' · '+(s.days>0?s.days+'d':'FINAL')+'</div><div class="s-name">'+s.name+'</div></div></div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--dim)">📅 '+(st.planned?fmtDate(st.planned):'TBD')+'</span><span class="ssb '+(isDone?'ssb-d':isActive?'ssb-a':'ssb-p')+'">'+(isDone?'✓ Pass':isActive?'● Active':'○ Pending')+'</span><span class="chev">▾</span></div></div><div class="step-body">'+bodyHtml+'</div>';
     fs.appendChild(card);
     if(i<CAND_STEPS.length-1){var conn=document.createElement('div');conn.className='conn';conn.innerHTML='<div style="text-align:center;color:var(--dim);font-size:14px;padding:2px 0">↓</div>';fs.appendChild(conn);}
@@ -1081,40 +912,30 @@ function buildCandFlow(c){
     });
   },50);
 }
-
 function saveCandStepField(sid){
   var c=getCand();if(!c)return;
-  var pf=document.getElementById('csf-'+sid+'-planned');
-  var af=document.getElementById('csf-'+sid+'-actual');
-  var nf=document.getElementById('csf-'+sid+'-notes');
-  if(pf)c.pipeline.steps[sid].planned=pf.value;
-  if(af)c.pipeline.steps[sid].actual=af.value;
-  if(nf)c.pipeline.steps[sid].notes=nf.value;
+  var pf=document.getElementById('csf-'+sid+'-planned');var af=document.getElementById('csf-'+sid+'-actual');var nf=document.getElementById('csf-'+sid+'-notes');
+  if(pf)c.pipeline.steps[sid].planned=pf.value;if(af)c.pipeline.steps[sid].actual=af.value;if(nf)c.pipeline.steps[sid].notes=nf.value;
   candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
   saveCandSB(c,function(){renderCandTable();renderCandStageBar();});
 }
-
 function markCandStepDone(sid,idx){
   var c=getCand();if(!c)return;
   var af=document.getElementById('csf-'+sid+'-actual');
-  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();
-  c.pipeline.steps[sid].status='done';
+  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();c.pipeline.steps[sid].status='done';
   c.pipeline.currentStep=idx+1;
   showToast('✓ '+sid+' passed → '+CAND_STEPS[idx+1].id,'s');
   candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
   saveCandSB(c,function(){buildAll();setTimeout(function(){openCandPipeline(viewingCandId);},200);});
 }
-
 function markCandHired(sid,idx){
   var c=getCand();if(!c)return;
   var af=document.getElementById('csf-'+sid+'-actual');
-  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();
-  c.pipeline.steps[sid].status='done';
+  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();c.pipeline.steps[sid].status='done';
   c.pipeline.status='hired';c.pipeline.result='hired';
   candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
   saveCandSB(c,function(){buildAll();showToast('🎉 Candidate marked as HIRED!','s');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
 }
-
 function showRejectForm(sid){document.querySelectorAll('.lh-form').forEach(function(f){f.classList.remove('show');});var el=document.getElementById('rej-form-'+sid);if(el)el.classList.add('show');}
 function hideRejForm(sid){var el=document.getElementById('rej-form-'+sid);if(el)el.classList.remove('show');}
 function confirmReject(sid){
@@ -1124,13 +945,7 @@ function confirmReject(sid){
   candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
   saveCandSB(c,function(){buildAll();showToast('Candidate rejected','e');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
 }
-
-function deleteCand(){
-  if(!confirm('Delete this candidate?'))return;
-  sbFetch('/hr_candidates?id=eq.'+viewingCandId,'DELETE')
-    .then(function(){candidates=candidates.filter(function(c){return c.id!==viewingCandId;});closeMo('candPipeMo');buildAll();showToast('Candidate deleted','e');})
-    .catch(function(e){showToast('Delete failed','e');});
-}
+function deleteCand(){if(!confirm('Delete this candidate?'))return;sbFetch('/hr_candidates?id=eq.'+viewingCandId,'DELETE').then(function(){candidates=candidates.filter(function(c){return c.id!==viewingCandId;});closeMo('candPipeMo');buildAll();showToast('Candidate deleted','e');}).catch(function(e){showToast('Delete failed','e');});}
 function editCand(){var c=getCand();closeMo('candPipeMo');setTimeout(function(){openAddCand(c);},100);}
 
 // ══════════════════════════════════════
