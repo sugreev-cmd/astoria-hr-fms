@@ -25,8 +25,6 @@ html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--bg);colo
 ::-webkit-scrollbar{width:4px;height:4px}::-webkit-scrollbar-thumb{background:var(--bd2);border-radius:2px}
 input,select,textarea,button{font-family:'DM Sans',sans-serif}
 .page{display:none}.page.active{display:flex}
-
-/* LOGIN */
 #loginPage{align-items:center;justify-content:center;min-height:100vh;width:100%;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(0,212,255,.06),transparent 60%),radial-gradient(ellipse 60% 80% at 80% 90%,rgba(176,96,255,.04),transparent 60%),var(--bg);position:relative;overflow:hidden;}
 .lcard{background:linear-gradient(160deg,var(--s2),var(--sf));border:1px solid var(--bd);border-radius:16px;width:400px;padding:40px 32px 32px;position:relative;z-index:1;box-shadow:0 40px 80px rgba(0,0,0,.6);animation:cardIn .4s ease both;}
 @keyframes cardIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
@@ -57,8 +55,6 @@ input,select,textarea,button{font-family:'DM Sans',sans-serif}
 .l-btn:hover{box-shadow:0 0 30px rgba(176,96,255,.2)}
 .l-err{text-align:center;font-size:11px;color:var(--red);margin-top:10px;min-height:16px}
 .l-foot{text-align:center;margin-top:16px;font-family:'JetBrains Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:1px;text-transform:uppercase}
-
-/* APP */
 #appPage{flex-direction:column;height:100vh;overflow:hidden}
 .topbar{display:flex;align-items:center;justify-content:space-between;padding:0 22px;height:52px;background:var(--sf);border-bottom:1px solid var(--bd);flex-shrink:0;z-index:100;position:relative;}
 .topbar::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:.2;}
@@ -81,8 +77,6 @@ input,select,textarea,button{font-family:'DM Sans',sans-serif}
 .tb-logout:hover{border-color:var(--red);color:var(--red)}
 .app-body{flex:1;overflow:hidden;position:relative}
 .view{display:none;height:100%;overflow-y:auto}.view.active{display:block}
-
-/* PIPELINE STAGE CARDS */
 .stage-bar{display:flex;gap:5px;padding:12px 20px;background:var(--sf);border-bottom:1px solid var(--bd);overflow-x:auto;flex-shrink:0;}
 .sc{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s;flex-shrink:0;min-width:110px;}
 .sc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px}
@@ -90,8 +84,6 @@ input,select,textarea,button{font-family:'DM Sans',sans-serif}
 .sc-lbl{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--dim);margin-bottom:3px;}
 .sc-num{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;line-height:1;margin-bottom:1px;}
 .sc-days{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--dim)}
-
-/* TOOLBAR */
 .toolbar{display:flex;align-items:center;gap:8px;padding:12px 20px;border-bottom:1px solid var(--bd);flex-wrap:wrap;}
 .srch-box{display:flex;align-items:center;gap:6px;background:var(--s2);border:1px solid var(--bd);border-radius:7px;padding:7px 12px;min-width:220px;transition:border-color .2s;}
 .srch-box:focus-within{border-color:var(--purple)}
@@ -100,8 +92,6 @@ input,select,textarea,button{font-family:'DM Sans',sans-serif}
 .fb{padding:5px 10px;border-radius:6px;border:1px solid var(--bd);background:var(--s2);color:var(--sub);font-size:10px;font-weight:600;cursor:pointer;transition:all .18s;letter-spacing:.3px;font-family:'JetBrains Mono',monospace;}
 .fb:hover{color:var(--text);border-color:var(--bd2)}.fb.active{background:var(--purple);border-color:var(--purple);color:#fff;font-weight:700}
 .add-btn{padding:7px 16px;background:linear-gradient(135deg,rgba(176,96,255,.18),rgba(176,96,255,.08));border:1px solid rgba(176,96,255,.35);border-radius:7px;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;margin-left:auto;}
-
-/* TABLE */
 .tw{padding:0 20px 20px;overflow-x:auto;}
 table{width:100%;border-collapse:collapse;min-width:900px}
 thead th{background:var(--s2);padding:9px 12px;text-align:left;font-family:'JetBrains Mono',monospace;font-size:8px;font-weight:600;text-transform:uppercase;letter-spacing:1.2px;color:var(--dim);border-bottom:1px solid var(--bd);white-space:nowrap;}
@@ -117,6 +107,7 @@ td{padding:10px 12px;vertical-align:middle}
 .st-hold{background:var(--gold2);color:var(--gold);border:1px solid rgba(255,184,0,.2)}
 .st-lost{background:rgba(255,68,68,.12);color:var(--red);border:1px solid rgba(255,68,68,.2)}
 .st-hired{background:var(--green2);color:var(--green);border:1px solid rgba(0,230,118,.2)}
+.st-joined{background:rgba(0,191,165,.15);color:var(--teal);border:1px solid rgba(0,191,165,.3)}
 .st-rejected{background:var(--red2);color:var(--red);border:1px solid rgba(255,68,68,.2)}
 .prog-dots{display:flex;gap:2px;flex-wrap:wrap}
 .pd{width:18px;height:18px;border-radius:4px;border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:7px;font-weight:700;color:var(--dim);background:var(--s2);transition:all .2s;}
@@ -124,8 +115,6 @@ td{padding:10px 12px;vertical-align:middle}
 .empty-state{text-align:center;padding:80px 20px;}
 .empty-icon{font-size:48px;opacity:.2;margin-bottom:16px}.empty-title{font-family:'Rajdhani',sans-serif;font-size:22px;color:var(--sub);margin-bottom:6px}.empty-sub{font-size:11px;color:var(--dim);margin-bottom:20px}
 .empty-btn{padding:9px 22px;background:rgba(176,96,255,.1);border:1px solid rgba(176,96,255,.3);border-radius:8px;color:var(--purple);font-size:12px;font-weight:700;cursor:pointer;}
-
-/* DASHBOARD */
 .dash-wrap{padding:20px}
 .kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:16px}
 .kpi{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;position:relative;overflow:hidden;cursor:pointer;transition:all .2s;}
@@ -135,7 +124,6 @@ td{padding:10px 12px;vertical-align:middle}
 .kpi-val{font-family:'Rajdhani',sans-serif;font-size:36px;font-weight:700;line-height:1;margin-bottom:4px}
 .kk0 .kpi-val{color:var(--purple)}.kk1 .kpi-val{color:var(--cyan)}.kk2 .kpi-val{color:var(--green)}.kk3 .kpi-val{color:var(--red)}.kk4 .kpi-val{color:var(--gold)}
 .kpi-sub{font-size:10px;color:var(--dim)}
-.dg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
 .dg3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 .dcard{background:var(--s2);border:1px solid var(--bd);border-radius:10px;overflow:hidden}
 .dcard-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--s3);border-bottom:1px solid var(--bd);}
@@ -151,8 +139,6 @@ td{padding:10px 12px;vertical-align:middle}
 .fn-bar{flex:1;height:18px;background:var(--s3);border-radius:3px;overflow:hidden;border:1px solid var(--bd)}
 .fn-fill{height:100%;border-radius:3px;display:flex;align-items:center;padding-left:7px;font-size:9px;font-weight:700;color:var(--bg);transition:width .8s ease}
 .fn-cnt{width:22px;text-align:right;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;color:var(--text);flex-shrink:0}
-
-/* MODALS */
 .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;align-items:center;justify-content:center;backdrop-filter:blur(6px)}.mo.open{display:flex}
 .md{background:var(--s2);border:1px solid var(--bd);border-radius:14px;width:700px;max-width:96vw;max-height:92vh;overflow-y:auto;animation:mIn .22s ease;box-shadow:0 40px 80px rgba(0,0,0,.6);}
 .md.xl{width:960px}
@@ -176,8 +162,6 @@ textarea.fi{resize:vertical;min-height:60px}
 .bs{padding:9px 14px;border:1.5px solid var(--bd);background:none;border-radius:8px;color:var(--sub);font-size:12px;cursor:pointer;transition:all .2s;}
 .bs:hover{border-color:var(--bd2);color:var(--text)}
 .bd2{padding:9px 14px;border:1.5px solid rgba(255,68,68,.3);background:var(--red2);border-radius:8px;color:var(--red);font-size:12px;cursor:pointer;}
-
-/* PIPELINE */
 .pipe-hdr{background:var(--s3);border:1px solid var(--bd);border-radius:10px;padding:14px 16px;margin-bottom:14px;}
 .ph-name{font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:var(--purple);margin-bottom:5px;}
 .ph-meta{display:flex;gap:12px;flex-wrap:wrap}
@@ -201,31 +185,23 @@ textarea.fi{resize:vertical;min-height:60px}
 .conn{display:flex;justify-content:center;color:var(--dim);font-size:14px;padding:2px 0}
 .da-btn{padding:6px 14px;background:rgba(176,96,255,.1);border:1px solid rgba(176,96,255,.3);border-radius:6px;color:var(--purple);font-size:11px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:10px;}
 .da-btn.green{background:rgba(0,230,118,.08);border-color:rgba(0,230,118,.25);color:var(--green)}
+.da-btn.teal{background:rgba(0,191,165,.08);border-color:rgba(0,191,165,.25);color:var(--teal)}
 .da-btn.red{background:rgba(255,68,68,.08);border-color:rgba(255,68,68,.25);color:var(--red)}
 .da-btn.gold{background:rgba(255,184,0,.08);border-color:rgba(255,184,0,.25);color:var(--gold)}
 .lh-form{margin-top:10px;padding:12px;background:var(--s3);border:1px solid var(--bd);border-radius:8px;display:none}.lh-form.show{display:block}
 .lh-row{display:flex;gap:8px;align-items:flex-end;margin-top:8px;flex-wrap:wrap}
 .lh-label{font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:1px;color:var(--sub);text-transform:uppercase;margin-bottom:4px}
-
-/* SYNC/TOAST */
 .sync-dot{position:fixed;bottom:14px;right:14px;z-index:400;padding:5px 11px;border-radius:20px;font-size:9px;font-weight:600;display:flex;align-items:center;gap:5px;transition:all .25s;font-family:'JetBrains Mono',monospace;letter-spacing:.5px;}
 .sync-dot.saved{background:rgba(0,230,118,.1);border:1px solid rgba(0,230,118,.25);color:var(--green)}.sync-dot.saving{background:var(--gold2);border:1px solid rgba(255,184,0,.3);color:var(--gold)}.sync-dot.err{background:var(--red2);border:1px solid rgba(255,68,68,.3);color:var(--red)}
 .sd{width:5px;height:5px;border-radius:50%;background:currentColor;animation:blink .8s ease infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 .toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(60px);background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:10px 18px;font-size:11px;z-index:999;opacity:0;transition:all .28s;white-space:nowrap;color:var(--text);box-shadow:0 8px 24px rgba(0,0,0,.4);}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}.toast.s{border-left:3px solid var(--green)}.toast.e{border-left:3px solid var(--red)}.toast.i{border-left:3px solid var(--purple)}
-
-/* TAB SWITCHER */
-.tab-switch{display:flex;gap:6px;padding:12px 20px;background:var(--sf);border-bottom:1px solid var(--bd);}
-.tab-btn{padding:7px 18px;border-radius:8px;border:1px solid var(--bd);background:var(--s2);color:var(--sub);font-size:11px;font-weight:600;cursor:pointer;transition:all .2s;}
-.tab-btn.active{background:var(--purple2);border-color:rgba(176,96,255,.4);color:var(--purple)}
-
-@media(max-width:900px){.kpi-row{grid-template-columns:repeat(3,1fr)}.dg2,.dg3{grid-template-columns:1fr}}
+@media(max-width:900px){.kpi-row{grid-template-columns:repeat(3,1fr)}.dg3{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
-<!-- LOGIN -->
 <div id="loginPage" class="page active">
   <div class="lcard">
     <div class="l-brand">
@@ -251,7 +227,6 @@ textarea.fi{resize:vertical;min-height:60px}
   </div>
 </div>
 
-<!-- APP -->
 <div id="appPage" class="page" style="flex-direction:column">
   <div class="topbar">
     <div class="tb-brand"><div class="tb-logo">👥</div><div class="tb-name">ASTORIA <span>LIVING</span><small>HUMAN RESOURCE FMS</small></div></div>
@@ -276,7 +251,7 @@ textarea.fi{resize:vertical;min-height:60px}
         <div class="kpi-row">
           <div class="kpi kk0"><div class="kpi-lbl">Total Jobs</div><div class="kpi-val" id="dk0">0</div><div class="kpi-sub">Active postings</div></div>
           <div class="kpi kk1"><div class="kpi-lbl">Total Candidates</div><div class="kpi-val" id="dk1">0</div><div class="kpi-sub">In pipeline</div></div>
-          <div class="kpi kk2"><div class="kpi-lbl">Hired</div><div class="kpi-val" id="dk2">0</div><div class="kpi-sub">This cycle</div></div>
+          <div class="kpi kk2"><div class="kpi-lbl">Hired / Joined</div><div class="kpi-val" id="dk2">0</div><div class="kpi-sub">This cycle</div></div>
           <div class="kpi kk3"><div class="kpi-lbl">Rejected</div><div class="kpi-val" id="dk3">0</div><div class="kpi-sub">Not selected</div></div>
           <div class="kpi kk4"><div class="kpi-lbl">In Interview</div><div class="kpi-val" id="dk4">0</div><div class="kpi-sub">Active stage</div></div>
         </div>
@@ -327,6 +302,7 @@ textarea.fi{resize:vertical;min-height:60px}
           <button class="fb" data-f="Offer Letter">Offer</button>
           <button class="fb" data-f="Onboarding">Onboarding</button>
           <button class="fb" data-f="Hired">Hired ✅</button>
+          <button class="fb" data-f="Joined">Joined 🎉</button>
           <button class="fb" data-f="Rejected">Rejected</button>
         </div>
         <button class="add-btn" id="addCandBtn">+ New Candidate</button>
@@ -339,7 +315,6 @@ textarea.fi{resize:vertical;min-height:60px}
         <div id="candEmpty" class="empty-state"><div class="empty-icon">👤</div><div class="empty-title">No Candidates Yet</div><div class="empty-sub">Add candidates to start tracking interviews</div><button class="empty-btn" id="emptyCandBtn">+ Add Candidate</button></div>
       </div>
     </div>
-
   </div>
 </div>
 
@@ -401,9 +376,6 @@ textarea.fi{resize:vertical;min-height:60px}
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════
-// SUPABASE CONFIG — Same as SCM project
-// ══════════════════════════════════════
 var SUPABASE_URL='https://duckuubnszaytuuerffx.supabase.co';
 var SUPABASE_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImR1Y2t1dWJuc3pheXR1dWVyZmZ4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM4MjQ4NDMsImV4cCI6MjA4OTQwMDg0M30.Aoesp7WobjoyvQWFIIZkDpE0JIcvnX9lLlLihK0byLE';
 var SB_API=SUPABASE_URL+'/rest/v1';
@@ -419,9 +391,6 @@ function sbFetch(path,method,body){
   });
 }
 
-// ══════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════
 var PASSWORDS={owner:'hr@owner',hr_manager:'hr@manager',interviewer:'hr@interview',viewer:'hr@view'};
 var ROLE_LABELS={owner:'👑 Owner / MD',hr_manager:'🧑‍💼 HR Manager',interviewer:'🎯 Interviewer',viewer:'👁️ View Only'};
 var READ_ONLY=['viewer'];
@@ -429,9 +398,6 @@ var currentRole=null,editingJobId=null,editingCandId=null,viewingJobId=null,view
 var jobs=[],candidates=[],jobFilt='All',candFilt='All';
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
-// ══════════════════════════════════════
-// JOB PIPELINE STEPS
-// ══════════════════════════════════════
 var JOB_STEPS=[
   {id:'JD',name:'Job Description (JD) Creation',icon:'📝',color:'var(--cyan)',cbg:'var(--cyan2)',days:1},
   {id:'POST',name:'Job Posting',icon:'📢',color:'var(--purple)',cbg:'var(--purple2)',days:1},
@@ -439,9 +405,6 @@ var JOB_STEPS=[
   {id:'CLOSED',name:'Position Closed / Filled',icon:'✅',color:'var(--green)',cbg:'var(--green2)',days:0,isEnd:true}
 ];
 
-// ══════════════════════════════════════
-// CANDIDATE PIPELINE STEPS
-// ══════════════════════════════════════
 var CAND_STEPS=[
   {id:'TEL',name:'Telephonic Confirmation & Fill Details',icon:'📞',color:'var(--cyan)',cbg:'var(--cyan2)',days:1},
   {id:'TECH',name:'Technical / Department Interview (Round 2)',icon:'🔧',color:'var(--blue)',cbg:'var(--blue2)',days:3},
@@ -451,14 +414,21 @@ var CAND_STEPS=[
   {id:'ONBOARD',name:'Onboarding & Joining',icon:'🎉',color:'var(--green)',cbg:'var(--green2)',days:1,isEnd:true}
 ];
 
-// ══════════════════════════════════════
-// HELPERS
-// ══════════════════════════════════════
+// ── JOINING REJECT REASONS (only for Did Not Join) ──
+var JOIN_REJECT_REASONS=[
+  'Candidate did not show up on joining day',
+  'Candidate accepted another offer',
+  'Candidate demanded higher salary at last moment',
+  'Offer revoked by company',
+  'Personal reasons / family issue',
+  'Relocation issue',
+  'Other'
+];
+
 function today(){return new Date().toISOString().split('T')[0];}
 function fmtDate(d){if(!d)return'—';var x=new Date(d);return x.getDate()+' '+MON[x.getMonth()]+' '+String(x.getFullYear()).slice(2);}
 function escHtml(t){if(!t)return'';return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function addDays(dateStr,n){var d=new Date(dateStr);d.setDate(d.getDate()+n);return d.toISOString().split('T')[0];}
-function daysBetween(d1,d2){return Math.round((new Date(d2)-new Date(d1))/(1000*60*60*24));}
 
 function initJobPipeline(startDate){
   var sd=startDate||today();
@@ -473,7 +443,7 @@ function initJobPipeline(startDate){
 
 function initCandPipeline(startDate){
   var sd=startDate||today();
-  var pipe={currentStep:0,steps:{},status:'active',result:'',rejReason:''};
+  var pipe={currentStep:0,steps:{},status:'active',result:'',rejReason:'',joiningDate:''};
   var runDate=sd;
   CAND_STEPS.forEach(function(s,i){
     pipe.steps[s.id]={planned:runDate,actual:'',status:'pending',notes:''};
@@ -492,28 +462,16 @@ function getJobStatus(job){
   return{cls:'st-active',txt:'Active'};
 }
 
+// ── CHANGE 1: getCandStatus — joined ka alag status ──
 function getCandStatus(c){
   if(!c.pipeline)return{cls:'st-active',txt:'In Process'};
   var s=c.pipeline.status;
+  if(s==='joined')return{cls:'st-joined',txt:'🎉 Joined'};
   if(s==='hired')return{cls:'st-hired',txt:'✅ Hired'};
   if(s==='rejected')return{cls:'st-rejected',txt:'❌ Rejected'};
   return{cls:'st-active',txt:'In Process'};
 }
 
-function currentJobStage(job){
-  if(!job.pipeline)return'JD';
-  var cs=JOB_STEPS[job.pipeline.currentStep];
-  return cs?cs.name:'—';
-}
-function currentCandStage(c){
-  if(!c.pipeline)return'TEL';
-  var cs=CAND_STEPS[c.pipeline.currentStep];
-  return cs?cs.name:'—';
-}
-
-// ══════════════════════════════════════
-// SUPABASE DATA LAYER
-// ══════════════════════════════════════
 function setSS(s,t){var d=document.getElementById('syncDot'),tx=document.getElementById('syncTxt');d.className='sync-dot '+s;tx.textContent=t;}
 
 function loadData(){
@@ -551,9 +509,6 @@ function updatePills(){
   document.getElementById('candsPill').textContent='👤 '+candidates.length+' Candidates';
 }
 
-// ══════════════════════════════════════
-// LOGIN
-// ══════════════════════════════════════
 var selRole=null;
 function pickRole(r,el){document.querySelectorAll('.l-role-btn').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');selRole=r;document.getElementById('passInput').focus();document.getElementById('lErr').textContent='';}
 function doLogin(){
@@ -581,9 +536,6 @@ function enterApp(){
   loadData();
 }
 
-// ══════════════════════════════════════
-// VIEW
-// ══════════════════════════════════════
 function showView(v){
   document.querySelectorAll('.view').forEach(function(e){e.classList.remove('active');});
   document.querySelectorAll('.tb-ni').forEach(function(e){e.classList.remove('active');});
@@ -592,25 +544,14 @@ function showView(v){
   if(v==='dash')buildDash();
 }
 
-// ══════════════════════════════════════
-// JOB STAGE BAR
-// ══════════════════════════════════════
 function renderJobStageBar(){
   document.getElementById('jobStageBar').innerHTML=JOB_STEPS.map(function(s,i){
     var cnt=jobs.filter(function(j){return j.pipeline&&JOB_STEPS[j.pipeline.currentStep]&&JOB_STEPS[j.pipeline.currentStep].id===s.id;}).length;
     return'<div class="sc" onclick="filterJobs(\''+s.name+'\')" style="border-top:2px solid '+s.color+'"><div class="sc-lbl" style="color:'+s.color+'">'+s.icon+' '+s.id+'</div><div class="sc-num" style="color:'+s.color+'">'+cnt+'</div><div class="sc-days">'+s.name.slice(0,12)+'...</div></div>';
   }).join('');
 }
+function filterJobs(stage){jobFilt=stage;document.querySelectorAll('#jobFilterBtns .fb').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-f')===stage);});renderJobTable();}
 
-function filterJobs(stage){
-  jobFilt=stage;
-  document.querySelectorAll('#jobFilterBtns .fb').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-f')===stage);});
-  renderJobTable();
-}
-
-// ══════════════════════════════════════
-// JOB TABLE
-// ══════════════════════════════════════
 function renderJobTable(){
   var q=document.getElementById('jobSrch').value.toLowerCase();
   var data=jobs.filter(function(j){
@@ -639,33 +580,30 @@ function renderJobTable(){
   }).join('');
 }
 
-// ══════════════════════════════════════
-// CANDIDATE STAGE BAR
-// ══════════════════════════════════════
+// ── CHANGE 2: Stage bar — Joined counter add kiya ──
 function renderCandStageBar(){
+  var joinedCnt=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='joined';}).length;
+  var hiredCnt=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='hired';}).length;
+  var rejCnt=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='rejected';}).length;
   document.getElementById('candStageBar').innerHTML=CAND_STEPS.map(function(s,i){
-    var cnt=candidates.filter(function(c){return c.pipeline&&CAND_STEPS[c.pipeline.currentStep]&&CAND_STEPS[c.pipeline.currentStep].id===s.id;}).length;
+    var cnt=candidates.filter(function(c){return c.pipeline&&CAND_STEPS[c.pipeline.currentStep]&&CAND_STEPS[c.pipeline.currentStep].id===s.id&&c.pipeline.status==='active';}).length;
     return'<div class="sc" onclick="filterCands(\''+s.name+'\')" style="border-top:2px solid '+s.color+'"><div class="sc-lbl" style="color:'+s.color+'">'+s.icon+' '+s.id+'</div><div class="sc-num" style="color:'+s.color+'">'+cnt+'</div><div class="sc-days">'+s.name.slice(0,12)+'...</div></div>';
   }).join('')
-  +'<div class="sc" style="border-top:2px solid var(--green)"><div class="sc-lbl" style="color:var(--green)">✅ HIRED</div><div class="sc-num" style="color:var(--green)">'+candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='hired';}).length+'</div><div class="sc-days">Joined</div></div>'
-  +'<div class="sc" style="border-top:2px solid var(--red)"><div class="sc-lbl" style="color:var(--red)">❌ REJTD</div><div class="sc-num" style="color:var(--red)">'+candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='rejected';}).length+'</div><div class="sc-days">Not selected</div></div>';
+  +'<div class="sc" style="border-top:2px solid var(--green)"><div class="sc-lbl" style="color:var(--green)">✅ HIRED</div><div class="sc-num" style="color:var(--green)">'+hiredCnt+'</div><div class="sc-days">Hired</div></div>'
+  +'<div class="sc" style="border-top:2px solid var(--teal)"><div class="sc-lbl" style="color:var(--teal)">🎉 JOINED</div><div class="sc-num" style="color:var(--teal)">'+joinedCnt+'</div><div class="sc-days">Joined</div></div>'
+  +'<div class="sc" style="border-top:2px solid var(--red)"><div class="sc-lbl" style="color:var(--red)">❌ REJTD</div><div class="sc-num" style="color:var(--red)">'+rejCnt+'</div><div class="sc-days">Not selected</div></div>';
 }
 
-function filterCands(stage){
-  candFilt=stage;
-  document.querySelectorAll('#candFilterBtns .fb').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-f')===stage);});
-  renderCandTable();
-}
+function filterCands(stage){candFilt=stage;document.querySelectorAll('#candFilterBtns .fb').forEach(function(b){b.classList.toggle('active',b.getAttribute('data-f')===stage);});renderCandTable();}
 
-// ══════════════════════════════════════
-// CANDIDATE TABLE
-// ══════════════════════════════════════
+// ── CHANGE 3: renderCandTable — Joined filter add kiya ──
 function renderCandTable(){
   var q=document.getElementById('candSrch').value.toLowerCase();
   var data=candidates.filter(function(c){
-    if(candFilt!=='All'&&candFilt!=='Hired'&&candFilt!=='Rejected'){var cs=CAND_STEPS[c.pipeline?c.pipeline.currentStep:0];if(!cs||cs.name!==candFilt)return false;}
-    if(candFilt==='Hired'&&(!c.pipeline||c.pipeline.status!=='hired'))return false;
-    if(candFilt==='Rejected'&&(!c.pipeline||c.pipeline.status!=='rejected'))return false;
+    if(candFilt==='Joined')return c.pipeline&&c.pipeline.status==='joined';
+    if(candFilt==='Hired')return c.pipeline&&c.pipeline.status==='hired';
+    if(candFilt==='Rejected')return c.pipeline&&c.pipeline.status==='rejected';
+    if(candFilt!=='All'){var cs=CAND_STEPS[c.pipeline?c.pipeline.currentStep:0];if(!cs||cs.name!==candFilt)return false;}
     if(q){var s=(c.name+' '+(c.mobile||'')+' '+(c.email||'')).toLowerCase();if(s.indexOf(q)<0)return false;}
     return true;
   });
@@ -690,11 +628,8 @@ function renderCandTable(){
   }).join('');
 }
 
-// ══════════════════════════════════════
-// DASHBOARD
-// ══════════════════════════════════════
 function buildDash(){
-  var hired=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='hired';}).length;
+  var hired=candidates.filter(function(c){return c.pipeline&&(c.pipeline.status==='hired'||c.pipeline.status==='joined');}).length;
   var rejected=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='rejected';}).length;
   var inInterview=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='active';}).length;
   document.getElementById('dk0').textContent=jobs.length;
@@ -703,19 +638,23 @@ function buildDash(){
   document.getElementById('dk3').textContent=rejected;
   document.getElementById('dk4').textContent=inInterview;
 
-  var jc=['var(--cyan)','var(--purple)','var(--blue)','var(--green)'];
   document.getElementById('jobPipelineDist').innerHTML=JOB_STEPS.map(function(s,i){
     var cnt=jobs.filter(function(j){return j.pipeline&&JOB_STEPS[j.pipeline.currentStep]&&JOB_STEPS[j.pipeline.currentStep].id===s.id;}).length;
     var pct=jobs.length>0&&cnt>0?Math.max((cnt/jobs.length)*100,5):0;
     return'<div class="fn-row"><div class="fn-lbl">'+s.icon+' '+s.id+'</div><div class="fn-bar"><div class="fn-fill" style="width:'+pct+'%;background:'+s.color+'">'+(cnt>1?cnt:'')+'</div></div><div class="fn-cnt" style="color:'+s.color+'">'+cnt+'</div></div>';
   }).join('')||'<div style="color:var(--dim);font-size:11px">No jobs yet</div>';
 
-  var allStages=CAND_STEPS.concat([{id:'HIRED',name:'Hired',icon:'✅',color:'var(--green)'},{id:'REJ',name:'Rejected',icon:'❌',color:'var(--red)'}]);
+  var allStages=CAND_STEPS.concat([
+    {id:'HIRED',name:'Hired',icon:'✅',color:'var(--green)'},
+    {id:'JOINED',name:'Joined',icon:'🎉',color:'var(--teal)'},
+    {id:'REJ',name:'Rejected',icon:'❌',color:'var(--red)'}
+  ]);
   document.getElementById('candStageDist').innerHTML=allStages.map(function(s){
     var cnt;
-    if(s.id==='HIRED')cnt=hired;
+    if(s.id==='HIRED')cnt=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='hired';}).length;
+    else if(s.id==='JOINED')cnt=candidates.filter(function(c){return c.pipeline&&c.pipeline.status==='joined';}).length;
     else if(s.id==='REJ')cnt=rejected;
-    else cnt=candidates.filter(function(c){return c.pipeline&&CAND_STEPS[c.pipeline.currentStep]&&CAND_STEPS[c.pipeline.currentStep].id===s.id;}).length;
+    else cnt=candidates.filter(function(c){return c.pipeline&&CAND_STEPS[c.pipeline.currentStep]&&CAND_STEPS[c.pipeline.currentStep].id===s.id&&c.pipeline.status==='active';}).length;
     var pct=candidates.length>0&&cnt>0?Math.max((cnt/candidates.length)*100,5):0;
     return'<div class="fn-row"><div class="fn-lbl">'+s.icon+' '+s.id+'</div><div class="fn-bar"><div class="fn-fill" style="width:'+pct+'%;background:'+s.color+'">'+(cnt>1?cnt:'')+'</div></div><div class="fn-cnt" style="color:'+s.color+'">'+cnt+'</div></div>';
   }).join('')||'<div style="color:var(--dim);font-size:11px">No candidates yet</div>';
@@ -729,9 +668,6 @@ function buildDash(){
   document.getElementById('recentAct').innerHTML=ra.length?ra.map(function(c){var cs=CAND_STEPS[c.pipeline?c.pipeline.currentStep:0]||CAND_STEPS[0];return'<div class="act-item"><div class="act-dot" style="background:'+cs.color+'"></div><div class="act-time">'+fmtDate(c.date)+'</div><div class="act-txt">'+escHtml(c.name)+' — <span style="color:var(--purple)">'+cs.name+'</span></div></div>';}).join(''):'<div style="color:var(--dim);font-size:11px">No recent activity</div>';
 }
 
-// ══════════════════════════════════════
-// ADD JOB
-// ══════════════════════════════════════
 function openAddJob(j){
   if(READ_ONLY.includes(currentRole)){showToast('View only','e');return;}
   editingJobId=j?j.id:null;
@@ -762,9 +698,6 @@ function saveJob(){
   });
 }
 
-// ══════════════════════════════════════
-// ADD CANDIDATE
-// ══════════════════════════════════════
 function openAddCand(c){
   if(READ_ONLY.includes(currentRole)){showToast('View only','e');return;}
   editingCandId=c?c.id:null;
@@ -799,9 +732,6 @@ function saveCand(){
   });
 }
 
-// ══════════════════════════════════════
-// JOB PIPELINE
-// ══════════════════════════════════════
 function getJob(){return jobs.find(function(x){return x.id===viewingJobId;})||null;}
 function openJobPipeline(id){
   viewingJobId=id;var j=getJob();if(!j)return;
@@ -855,9 +785,6 @@ function markJobStepDone(sid,idx){
 function deleteJob(){if(!confirm('Delete this job posting?'))return;sbFetch('/hr_jobs?id=eq.'+viewingJobId,'DELETE').then(function(){jobs=jobs.filter(function(j){return j.id!==viewingJobId;});closeMo('jobPipeMo');buildAll();showToast('Job deleted','e');}).catch(function(e){showToast('Delete failed','e');});}
 function editJob(){var j=getJob();closeMo('jobPipeMo');setTimeout(function(){openAddJob(j);},100);}
 
-// ══════════════════════════════════════
-// CANDIDATE PIPELINE
-// ══════════════════════════════════════
 function getCand(){return candidates.find(function(x){return x.id===viewingCandId;})||null;}
 function openCandPipeline(id){
   viewingCandId=id;var c=getCand();if(!c)return;
@@ -867,14 +794,38 @@ function openCandPipeline(id){
   document.getElementById('candPipeHdr').innerHTML='<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px"><div><div class="ph-name">'+escHtml(c.name)+'</div><div class="ph-meta"><div class="ph-m">📞 <span>'+escHtml(c.mobile||'—')+'</span></div>'+(c.email?'<div class="ph-m">✉️ <span>'+escHtml(c.email)+'</span></div>':'')+'<div class="ph-m">💼 <span>'+escHtml(job?job.title:'—')+'</span></div>'+(c.exp?'<div class="ph-m">⏱ <span>'+escHtml(c.exp)+' yrs exp</span></div>':'')+'</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px"><span class="status-badge '+ps.cls+'">'+ps.txt+'</span>'+(c.resume?'<a href="'+escHtml(c.resume)+'" target="_blank" style="font-size:10px;color:var(--cyan);text-decoration:none">📎 Resume</a>':'')+'</div></div>'+(c.currSal||c.expSal?'<div style="margin-top:10px;display:flex;gap:16px"><div style="font-size:10px;color:var(--dim)">Current: <span style="color:var(--sub)">'+escHtml(c.currSal||'—')+'</span></div><div style="font-size:10px;color:var(--dim)">Expected: <span style="color:var(--gold)">'+escHtml(c.expSal||'—')+'</span></div>'+(c.notice?'<div style="font-size:10px;color:var(--dim)">Notice: <span style="color:var(--sub)">'+escHtml(c.notice)+'</span></div>':'')+'</div>':'');
   buildCandFlow(c);openMo('candPipeMo');
 }
+
+// ── CHANGE 4: buildCandFlow — ONBOARD step par Joined / Did Not Join ──
 function buildCandFlow(c){
   var p=c.pipeline,fs=document.getElementById('candFlowSteps');fs.innerHTML='';
   var ro=READ_ONLY.includes(currentRole);
-  var isHired=p.status==='hired',isRejected=p.status==='rejected';
-  if(isHired){var b=document.createElement('div');b.innerHTML='<div style="padding:12px 16px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.25);border-radius:10px;color:var(--green);font-size:13px;font-weight:600;margin-bottom:12px;display:flex;align-items:center;gap:10px">🎉 Candidate HIRED!'+(p.joiningDate?' — Joining: '+fmtDate(p.joiningDate):'')+'</div>';fs.appendChild(b);}
-  if(isRejected){var b2=document.createElement('div');b2.innerHTML='<div style="padding:12px 16px;background:rgba(255,68,68,.06);border:1px solid rgba(255,68,68,.2);border-radius:10px;color:var(--red);font-size:13px;font-weight:600;margin-bottom:12px">❌ Candidate Rejected'+(p.rejReason?' — '+escHtml(p.rejReason):'')+'</div>';fs.appendChild(b2);}
+  var isHired=p.status==='hired';
+  var isJoined=p.status==='joined';
+  var isRejected=p.status==='rejected';
+  var isTerminal=isHired||isJoined||isRejected;
+
+  // Banner
+  if(isJoined){
+    var bj=document.createElement('div');
+    bj.innerHTML='<div style="padding:12px 16px;background:rgba(0,191,165,.08);border:1px solid rgba(0,191,165,.25);border-radius:10px;color:var(--teal);font-size:13px;font-weight:600;margin-bottom:12px">🎉 Candidate JOINED!'+(p.joiningDate?' — Joining Date: '+fmtDate(p.joiningDate):'')+'</div>';
+    fs.appendChild(bj);
+  }
+  if(isHired){
+    var bh=document.createElement('div');
+    bh.innerHTML='<div style="padding:12px 16px;background:rgba(0,230,118,.08);border:1px solid rgba(0,230,118,.25);border-radius:10px;color:var(--green);font-size:13px;font-weight:600;margin-bottom:12px">✅ Candidate HIRED!'+(p.joiningDate?' — Joining: '+fmtDate(p.joiningDate):'')+'</div>';
+    fs.appendChild(bh);
+  }
+  if(isRejected){
+    var br=document.createElement('div');
+    br.innerHTML='<div style="padding:12px 16px;background:rgba(255,68,68,.06);border:1px solid rgba(255,68,68,.2);border-radius:10px;color:var(--red);font-size:13px;font-weight:600;margin-bottom:12px">❌ Candidate Rejected'+(p.rejReason?' — '+escHtml(p.rejReason):'')+'</div>';
+    fs.appendChild(br);
+  }
+
   CAND_STEPS.forEach(function(s,i){
-    var st=p.steps[s.id]||{};var isDone=st.status==='done';var isActive=p.currentStep===i&&!isHired&&!isRejected;var isLocked=p.currentStep<i&&!isDone;
+    var st=p.steps[s.id]||{};
+    var isDone=st.status==='done';
+    var isActive=p.currentStep===i&&!isTerminal;
+    var isLocked=p.currentStep<i&&!isDone;
     var card=document.createElement('div');
     card.className='step-card'+(isActive?' active-s':'')+(isDone?' done-s':'')+(isLocked?' locked-s':'');
     if(isActive||isDone)card.classList.add('open');
@@ -890,28 +841,82 @@ function buildCandFlow(c){
     else if(s.id==='OFFER')notePlaceholder='Offer letter details, salary offered, accepted/negotiating...';
     else if(s.id==='ONBOARD')notePlaceholder='Document verification, joining date, onboarding status...';
     bodyHtml+='<div class="sb-row full"><div class="fg"><label class="fl">Notes</label><input class="fi" id="csf-'+s.id+'-notes" value="'+(st.notes||'').replace(/"/g,'&quot;')+'" placeholder="'+notePlaceholder+'" '+(ro?'disabled':'')+' onchange="saveCandStepField(\''+s.id+'\')"></div></div>';
+
     if(isActive&&!ro){
-      bodyHtml+='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">';
-      if(!s.isEnd)bodyHtml+='<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'">✓ Pass → '+CAND_STEPS[i+1].id+'</button>';
-      else bodyHtml+='<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'" data-final="hire">🎉 Mark as HIRED</button>';
-      bodyHtml+='<button class="da-btn red" onclick="showRejectForm(\''+s.id+'\')">❌ Reject</button></div>';
-      bodyHtml+='<div class="lh-form" id="rej-form-'+s.id+'"><div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--red);letter-spacing:1px;margin-bottom:8px">❌ REJECT CANDIDATE</div><div class="lh-label">Reason for Rejection</div><select class="fs" id="rej-reason-'+s.id+'" style="margin-bottom:8px"><option value="">Select reason...</option><option>Skills not matching</option><option>Salary expectation too high</option><option>Failed technical test</option><option>Not culturally fit</option><option>Candidate withdrew</option><option>Better candidate selected</option><option>Position on hold</option><option>Other</option></select><div class="lh-row"><button class="da-btn red" onclick="confirmReject(\''+s.id+'\')">Confirm Reject</button><button class="da-btn" onclick="hideRejForm(\''+s.id+'\')">Cancel</button></div></div>';
+      // ── ONBOARD step: alag buttons ──
+      if(s.isEnd){
+        bodyHtml+='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">'
+          +'<button class="da-btn teal" data-cid="'+s.id+'" data-cidx="'+i+'" data-action="join">🎉 Joined</button>'
+          +'<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'" data-action="hire">✅ Hired</button>'
+          +'<button class="da-btn red" onclick="showRejectForm(\''+s.id+'\',true)">❌ Did Not Join</button>'
+          +'</div>';
+        // Joining date field
+        bodyHtml+='<div style="margin-top:8px;display:flex;gap:8px;align-items:center">'
+          +'<label class="fl" style="white-space:nowrap">Joining Date</label>'
+          +'<input class="fi" type="date" id="csf-'+s.id+'-joiningdate" value="'+(p.joiningDate||today())+'" style="max-width:180px">'
+          +'</div>';
+        // Did Not Join form (joining-specific reasons)
+        bodyHtml+='<div class="lh-form" id="rej-form-'+s.id+'">'
+          +'<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--red);letter-spacing:1px;margin-bottom:8px">❌ DID NOT JOIN — REASON</div>'
+          +'<div class="lh-label">Reason</div>'
+          +'<select class="fs" id="rej-reason-'+s.id+'" style="margin-bottom:8px">'
+          +'<option value="">Select reason...</option>'
+          +JOIN_REJECT_REASONS.map(function(r){return'<option>'+r+'</option>';}).join('')
+          +'</select>'
+          +'<div class="lh-row"><button class="da-btn red" onclick="confirmDidNotJoin(\''+s.id+'\')">Confirm Did Not Join</button><button class="da-btn" onclick="hideRejForm(\''+s.id+'\')">Cancel</button></div>'
+          +'</div>';
+      } else {
+        // Normal steps: Pass / Reject
+        bodyHtml+='<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">'
+          +'<button class="da-btn green" data-cid="'+s.id+'" data-cidx="'+i+'">✓ Pass → '+CAND_STEPS[i+1].id+'</button>'
+          +'<button class="da-btn red" onclick="showRejectForm(\''+s.id+'\',false)">❌ Reject</button>'
+          +'</div>';
+        // Normal reject form
+        bodyHtml+='<div class="lh-form" id="rej-form-'+s.id+'">'
+          +'<div style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--red);letter-spacing:1px;margin-bottom:8px">❌ REJECT CANDIDATE</div>'
+          +'<div class="lh-label">Reason for Rejection</div>'
+          +'<select class="fs" id="rej-reason-'+s.id+'" style="margin-bottom:8px">'
+          +'<option value="">Select reason...</option>'
+          +'<option>Skills not matching</option>'
+          +'<option>Salary expectation too high</option>'
+          +'<option>Failed technical test</option>'
+          +'<option>Not culturally fit</option>'
+          +'<option>Candidate withdrew</option>'
+          +'<option>Better candidate selected</option>'
+          +'<option>Position on hold</option>'
+          +'<option>Other</option>'
+          +'</select>'
+          +'<div class="lh-row"><button class="da-btn red" onclick="confirmReject(\''+s.id+'\')">Confirm Reject</button><button class="da-btn" onclick="hideRejForm(\''+s.id+'\')">Cancel</button></div>'
+          +'</div>';
+      }
     }
-    if(isDone)bodyHtml+='<div style="padding:8px 10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:7px;color:var(--green);font-size:11px;margin-top:8px">✅ Passed on '+fmtDate(st.actual||st.planned)+'</div>';
+
+    if(isTerminal){
+      var termTxt=isJoined?'🎉 Joined on '+(p.joiningDate?fmtDate(p.joiningDate):''):isHired?'✅ Hired':'❌ Rejected'+(p.rejReason?' — '+escHtml(p.rejReason):'');
+      bodyHtml+='<div style="padding:8px 10px;background:var(--s3);border-radius:7px;font-size:11px;color:var(--dim);margin-top:8px">'+termTxt+'</div>';
+    }
+    if(isDone&&!s.isEnd){bodyHtml+='<div style="padding:8px 10px;background:rgba(0,230,118,.05);border:1px solid rgba(0,230,118,.15);border-radius:7px;color:var(--green);font-size:11px;margin-top:8px">✅ Passed on '+fmtDate(st.actual||st.planned)+'</div>';}
+
     card.innerHTML='<div class="step-head" onclick="toggleStep(this)"><div class="sh-left"><div class="s-icon" style="background:'+s.cbg+';color:'+s.color+'">'+s.icon+'</div><div><div class="s-num" style="color:'+s.color+'">'+s.id+' · '+(s.days>0?s.days+'d':'FINAL')+'</div><div class="s-name">'+s.name+'</div></div></div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:JetBrains Mono,monospace;font-size:9px;color:var(--dim)">📅 '+(st.planned?fmtDate(st.planned):'TBD')+'</span><span class="ssb '+(isDone?'ssb-d':isActive?'ssb-a':'ssb-p')+'">'+(isDone?'✓ Pass':isActive?'● Active':'○ Pending')+'</span><span class="chev">▾</span></div></div><div class="step-body">'+bodyHtml+'</div>';
     fs.appendChild(card);
     if(i<CAND_STEPS.length-1){var conn=document.createElement('div');conn.className='conn';conn.innerHTML='<div style="text-align:center;color:var(--dim);font-size:14px;padding:2px 0">↓</div>';fs.appendChild(conn);}
   });
+
   setTimeout(function(){
-    document.querySelectorAll('.da-btn.green[data-cid]').forEach(function(btn){
-      btn.onclick=function(){
-        var final=btn.getAttribute('data-final');
-        if(final==='hire')markCandHired(btn.getAttribute('data-cid'),parseInt(btn.getAttribute('data-cidx')));
-        else markCandStepDone(btn.getAttribute('data-cid'),parseInt(btn.getAttribute('data-cidx')));
-      };
+    document.querySelectorAll('.da-btn[data-cid]').forEach(function(btn){
+      var action=btn.getAttribute('data-action');
+      if(!action){
+        // Normal pass button
+        btn.onclick=function(){markCandStepDone(btn.getAttribute('data-cid'),parseInt(btn.getAttribute('data-cidx')));};
+      } else if(action==='join'){
+        btn.onclick=function(){markCandJoined(btn.getAttribute('data-cid'),parseInt(btn.getAttribute('data-cidx')));};
+      } else if(action==='hire'){
+        btn.onclick=function(){markCandHired(btn.getAttribute('data-cid'),parseInt(btn.getAttribute('data-cidx')));};
+      }
     });
   },50);
 }
+
 function saveCandStepField(sid){
   var c=getCand();if(!c)return;
   var pf=document.getElementById('csf-'+sid+'-planned');var af=document.getElementById('csf-'+sid+'-actual');var nf=document.getElementById('csf-'+sid+'-notes');
@@ -919,6 +924,7 @@ function saveCandStepField(sid){
   candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
   saveCandSB(c,function(){renderCandTable();renderCandStageBar();});
 }
+
 function markCandStepDone(sid,idx){
   var c=getCand();if(!c)return;
   var af=document.getElementById('csf-'+sid+'-actual');
@@ -928,16 +934,54 @@ function markCandStepDone(sid,idx){
   candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
   saveCandSB(c,function(){buildAll();setTimeout(function(){openCandPipeline(viewingCandId);},200);});
 }
+
+// ── CHANGE 5: markCandJoined — nayi function ──
+function markCandJoined(sid,idx){
+  var c=getCand();if(!c)return;
+  var af=document.getElementById('csf-'+sid+'-actual');
+  var jd=document.getElementById('csf-'+sid+'-joiningdate');
+  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();
+  c.pipeline.steps[sid].status='done';
+  c.pipeline.status='joined';
+  c.pipeline.result='joined';
+  c.pipeline.joiningDate=jd&&jd.value?jd.value:today();
+  candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
+  saveCandSB(c,function(){buildAll();showToast('🎉 Candidate marked as JOINED!','s');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
+}
+
 function markCandHired(sid,idx){
   var c=getCand();if(!c)return;
   var af=document.getElementById('csf-'+sid+'-actual');
-  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();c.pipeline.steps[sid].status='done';
+  var jd=document.getElementById('csf-'+sid+'-joiningdate');
+  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();
+  c.pipeline.steps[sid].status='done';
   c.pipeline.status='hired';c.pipeline.result='hired';
+  if(jd&&jd.value)c.pipeline.joiningDate=jd.value;
   candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
-  saveCandSB(c,function(){buildAll();showToast('🎉 Candidate marked as HIRED!','s');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
+  saveCandSB(c,function(){buildAll();showToast('✅ Candidate marked as HIRED!','s');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
 }
-function showRejectForm(sid){document.querySelectorAll('.lh-form').forEach(function(f){f.classList.remove('show');});var el=document.getElementById('rej-form-'+sid);if(el)el.classList.add('show');}
+
+// ── CHANGE 6: confirmDidNotJoin — nayi function for ONBOARD reject ──
+function confirmDidNotJoin(sid){
+  var r=document.getElementById('rej-reason-'+sid);
+  var reason=r?r.value:'';
+  if(!reason){showToast('Please select a reason','e');return;}
+  var c=getCand();if(!c)return;
+  var af=document.getElementById('csf-'+sid+'-actual');
+  c.pipeline.steps[sid].actual=af&&af.value?af.value:today();
+  c.pipeline.status='rejected';
+  c.pipeline.result='rejected';
+  c.pipeline.rejReason='Did Not Join — '+reason;
+  candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
+  saveCandSB(c,function(){buildAll();showToast('❌ Marked as Did Not Join','e');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
+}
+
+function showRejectForm(sid,isOnboard){
+  document.querySelectorAll('.lh-form').forEach(function(f){f.classList.remove('show');});
+  var el=document.getElementById('rej-form-'+sid);if(el)el.classList.add('show');
+}
 function hideRejForm(sid){var el=document.getElementById('rej-form-'+sid);if(el)el.classList.remove('show');}
+
 function confirmReject(sid){
   var r=document.getElementById('rej-reason-'+sid);var reason=r?r.value:'';if(!reason){showToast('Please select a reason','e');return;}
   var c=getCand();if(!c)return;
@@ -945,20 +989,15 @@ function confirmReject(sid){
   candidates=candidates.map(function(x){return x.id===viewingCandId?c:x;});
   saveCandSB(c,function(){buildAll();showToast('Candidate rejected','e');setTimeout(function(){openCandPipeline(viewingCandId);},200);});
 }
+
 function deleteCand(){if(!confirm('Delete this candidate?'))return;sbFetch('/hr_candidates?id=eq.'+viewingCandId,'DELETE').then(function(){candidates=candidates.filter(function(c){return c.id!==viewingCandId;});closeMo('candPipeMo');buildAll();showToast('Candidate deleted','e');}).catch(function(e){showToast('Delete failed','e');});}
 function editCand(){var c=getCand();closeMo('candPipeMo');setTimeout(function(){openAddCand(c);},100);}
 
-// ══════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════
 function toggleStep(h){h.closest('.step-card').classList.toggle('open');}
 function openMo(id){document.getElementById(id).classList.add('open');}
 function closeMo(id){document.getElementById(id).classList.remove('open');}
 function showToast(msg,type){var t=document.getElementById('toast');t.textContent=msg;t.className='toast '+(type||'s')+' show';setTimeout(function(){t.classList.remove('show');},3200);}
 
-// ══════════════════════════════════════
-// INIT
-// ══════════════════════════════════════
 window.onload=function(){
   document.getElementById('passInput').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin();});
   document.getElementById('enterBtn').addEventListener('click',doLogin);
