@@ -1436,7 +1436,7 @@ function saveShortlisted(){
   var pos=document.getElementById('sl-position').value.trim();
   var cv=document.getElementById('sl-cv').value.trim();
   if(!name){showToast('⚠ Candidate name daalo','e');document.getElementById('sl-name').focus();return;}
-  if(!pos){showToast('⚠ Position daalo','e');document.getElementById('sl-position').focus();return;}
+  if(!pos){showToast('⚠ Position daalo','e');document.getElementById('sl-position').value.trim();document.getElementById('sl-position').focus();return;}
   if(!cv){showToast('⚠ CV link daalo','e');document.getElementById('sl-cv').focus();return;}
   var sav=document.getElementById('slSaving');sav.style.display='inline';
   var row={id:'SL'+Date.now(),candidate_name:name,position:pos,cv_link:cv,date:today(),created_at:new Date().toISOString()};
@@ -1462,6 +1462,7 @@ function deleteShortlisted(id){
   shortlistedCVs=shortlistedCVs.filter(function(x){return x.id!==id;});
   renderShortlisted();showToast('Deleted','e');
 }
+
 function clearSlForm(){
   document.getElementById('sl-name').value='';
   document.getElementById('sl-position').value='';
