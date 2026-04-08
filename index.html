@@ -1418,7 +1418,7 @@ function editCand(){var c=getCand();closeMo('candPipeMo');setTimeout(function(){
 var shortlistedCVs=[];
 
 function loadShortlisted(){
-  sbFetch('/hr_shortlisted?order=created_at.desc','GET')
+  sbFetch('/shortlisted_cvs?order=created_at.desc','GET')
     .then(function(res){
       shortlistedCVs=(res||[]).map(function(r){
         return{id:r.id,name:r.candidate_name||'',position:r.position||'',cv:r.cv_link||'',date:r.date||''};
@@ -1436,11 +1436,11 @@ function saveShortlisted(){
   var pos=document.getElementById('sl-position').value.trim();
   var cv=document.getElementById('sl-cv').value.trim();
   if(!name){showToast('⚠ Candidate name daalo','e');document.getElementById('sl-name').focus();return;}
-  if(!pos){showToast('⚠ Position daalo','e');document.getElementById('sl-position').value.trim();document.getElementById('sl-position').focus();return;}
+  if(!pos){showToast('⚠ Position daalo','e');document.getElementById('sl-position').focus();return;}
   if(!cv){showToast('⚠ CV link daalo','e');document.getElementById('sl-cv').focus();return;}
   var sav=document.getElementById('slSaving');sav.style.display='inline';
   var row={id:'SL'+Date.now(),candidate_name:name,position:pos,cv_link:cv,date:today(),created_at:new Date().toISOString()};
-  sbFetch('/hr_shortlisted?on_conflict=id','POST',row)
+  sbFetch('/shortlisted_cvs?on_conflict=id','POST',row)
     .then(function(){
       shortlistedCVs.unshift({id:row.id,name:name,position:pos,cv:cv,date:row.date});
       renderShortlisted();clearSlForm();sav.style.display='none';
@@ -1456,13 +1456,12 @@ function saveShortlisted(){
 
 function deleteShortlisted(id){
   if(!confirm('Are you sure you want to delete this candidate?'))return;
-  sbFetch('/hr_shortlisted?id=eq.'+id,'DELETE')
+  sbFetch('/shortlisted_cvs?id=eq.'+id,'DELETE')
     .then(function(){})
     .catch(function(){});
   shortlistedCVs=shortlistedCVs.filter(function(x){return x.id!==id;});
   renderShortlisted();showToast('Deleted','e');
 }
-
 function clearSlForm(){
   document.getElementById('sl-name').value='';
   document.getElementById('sl-position').value='';
